@@ -1,8 +1,17 @@
 #pragma once
+
 #include "GameUtilities.h"
+#include "Player.h"
 
 namespace RockPaperScissors
 {
-	void RockPaperScissorsGame(const GameUtilities::GameConditions aConditions, const GameUtilities::GeneralCasinoRules aGeneralRules, GameUtilities::PlayerInformation& aPlayerInformation);
+	class RockPaperScissorsTable
+	{
+	public:
+		void Play(const GameUtilities::GameConditions aConditions, const GameUtilities::GeneralCasinoRules aGeneralRules, Player::PlayerInformation& aPlayerInformation);
+
+	private:
+
+	};
 
 }

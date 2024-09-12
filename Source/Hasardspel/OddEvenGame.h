@@ -1,5 +1,25 @@
 #pragma once
-namespace OddEvenGame 
+#include "Player.h"
+
+namespace OddEvenGame
 {
-	void OddOrEvenGame(GameUtilities::GameConditions aConditions, GameUtilities::PlayerInformation& aPlayerInformation, GameUtilities::GeneralCasinoRules aGeneralRules);
+	class OddEvenTable
+	{
+	public:
+		OddEvenTable(const GameUtilities::GameConditions& aConditions, Player::PlayerInformation& aPLayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules);
+
+		void Play();
+
+	private:
+		static int myTotalWinAmountOddOrEven;
+		static int myTotalValueChangeOddOrEven;
+
+		int myBet;
+
+		const GameUtilities::GameConditions& myConditions;
+		Player::PlayerInformation& myPLayerInfo;
+		const GameUtilities::GeneralCasinoRules myGeneralRules;
+
+		void DisplayOddOrEvenGameStatBoard(const bool aGuess, const int aFirstDie, const int aSecondDie);
+	};
 }

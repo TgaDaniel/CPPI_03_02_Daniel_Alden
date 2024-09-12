@@ -9,14 +9,14 @@
 namespace GuessTheSquare
 {
 
-	void DisplaySquares(bool aSquareArray[], int aArraySize, int aDisplaySquare)
+	void GuessTheSquareTable::DisplaySquares(int aDisplaySquare) const
 	{
 		std::cout << "\n";
-		for (int i = 0; i < aArraySize; i++)
+		for (int i = 0; i < mySquares.size(); i++)
 		{
 			if (i == aDisplaySquare)
 			{
-				std::cout << "[" << (aSquareArray[i] ? "*" : " ") << "] ";
+				std::cout << "[" << (mySquares[i] ? "*" : " ") << "] ";
 			}
 			else
 			{
@@ -27,11 +27,11 @@ namespace GuessTheSquare
 	}
 
 
-	void DisplaySquares(GameUtilities::GameConditions aConditions)
+	void GuessTheSquareTable::DisplaySquares() const
 	{
 		std::cout << "\n";
 
-		for (int i = 1; i <= aConditions.maxRandomValue; i++)
+		for (int i = 1; i <= myConditions.maxRandomValue; i++)
 		{
 			std::cout << "[" << i << "] ";
 		}
@@ -39,13 +39,22 @@ namespace GuessTheSquare
 		std::cout << "\n";
 	}
 
-	void GuessTheSquareGame(bool aSquareArray[], int aSquareArraySize, const GameUtilities::GameConditions aConditions, GameUtilities::PlayerInformation& aPlayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules)
+	GuessTheSquareTable::GuessTheSquareTable(
+		const GameUtilities::GameConditions& aConditions, Player::PlayerInformation& aPlayerInfo,
+		const GameUtilities::GeneralCasinoRules aGeneralRules)
+		: myConditions(aConditions), myPLayerInfo(aPlayerInfo), myGeneralRules(aGeneralRules)
+	
+	{
+		mySquares = { false };
+	}
+
+	void GuessTheSquareTable::Play()
 	{
 		static int totalWinAmount{ 0 };
 		static int valueChangeAmount{ 0 };
 
 
-		if (totalWinAmount >= aGeneralRules.maxWinAmountPerTable)
+		if (totalWinAmount >= myGeneralRules.maxWinAmountPerTable)
 		{
 			std::cout << "\nYou are not allowed at this table anymore after winning so much. Leave!\n";
 			IOHandler::PauseThenClearScreen();
@@ -56,11 +65,11 @@ namespace GuessTheSquare
 
 		std::cout << "\nWelcome to Guess the square table!\n";
 
-		if (valueChangeAmount <= -aGeneralRules.reactionAmount)
+		if (valueChangeAmount <= -myGeneralRules.reactionAmount)
 		{
 			std::cout << "\nBetter luck this time, i'm sure you'll win.\n";
 		}
-		else if (valueChangeAmount >= aGeneralRules.reactionAmount)
+		else if (valueChangeAmount >= myGeneralRules.reactionAmount)
 		{
 			std::cout << "\nThe big winner is back huh? Share some of that luck will ya?\n";
 		}
@@ -74,8 +83,8 @@ namespace GuessTheSquare
 		if (IOHandler::TwoCharacterOptionInput('y', 'n'))
 		{
 			system("cls");
-			std::cout << "The game is simple, you get to guess in which box of the " << aSquareArraySize << " we have here a star is hidden in.\nYou get one try and if you don't find the star you lose"
-				<< "\nIf you get it your bet is given back multiplied by " << aConditions.winMultiplier << ".\n";
+			std::cout << "The game is simple, you get to guess in which box of the " << mySquares.size() << " we have here a star is hidden in.\nYou get one try and if you don't find the star you lose"
+				<< "\nIf you get it your bet is given back multiplied by " << myConditions.winMultiplier << ".\n";
 		}
 
 		std::cout << "\nWant to play? (y/n):";
@@ -84,16 +93,16 @@ namespace GuessTheSquare
 
 		while (IOHandler::TwoCharacterOptionInput('y', 'n'))
 		{
-			for (int i = 0; i < aSquareArraySize; i++)
+			for (int i = 0; i < mySquares.size(); i++)
 			{
-				aSquareArray[i] = false;
+				mySquares[i] = false;
 			}
 
 			system("cls");
 
-			bet = GameUtilities::HandleBetting(aPlayerInfo);
+			bet = GameUtilities::HandleBetting(myPLayerInfo);
 
-			DisplaySquares(aConditions);
+			DisplaySquares();
 
 
 			bool choosing{ true };
@@ -101,14 +110,14 @@ namespace GuessTheSquare
 			while (choosing)
 			{
 
-				int indexWithStarIn{ RandomHandler::RandomNumberInRange(aConditions.minRandomValue, aConditions.maxRandomValue) - 1 };
-				aSquareArray[indexWithStarIn] = true;
+				int indexWithStarIn{ RandomHandler::RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue) - 1 };
+				mySquares[indexWithStarIn] = true;
 				std::cout << "In which box do you think the star will be?\nInput: ";
 
 				int playerInput;
 				std::cin >> playerInput;
 
-				if (IOHandler::ValidateInput() && playerInput > 0 && playerInput <= aSquareArraySize )
+				if (IOHandler::ValidateInput() && playerInput > 0 && playerInput <= mySquares.size() )
 				{
 					choosing = false;
 					system("cls");
@@ -117,25 +126,22 @@ namespace GuessTheSquare
 
 					if (indexGuess == indexWithStarIn)
 					{
-						aPlayerInfo.money += bet * aConditions.winMultiplier;
+						myPLayerInfo.IncrementallyChangeMoney(bet * myConditions.winMultiplier);
 
-						GameUtilities::AddStatisticsToLastFiveGamesArray(aPlayerInfo, (bet * aConditions.winMultiplier));
+						myPLayerInfo.AddStatisticsToLastFiveGames( (bet * myConditions.winMultiplier));
 
-						totalWinAmount += (bet * aConditions.winMultiplier) - bet;
-						valueChangeAmount += (bet * aConditions.winMultiplier) - bet;
+						totalWinAmount += (bet * myConditions.winMultiplier) - bet;
+						valueChangeAmount += (bet * myConditions.winMultiplier) - bet;
 
-						DisplaySquares(aSquareArray, aSquareArraySize, indexGuess);
+						DisplaySquares(indexGuess);
 
-						std::cout << "\nYou guessed right! which means you win " << bet * aConditions.winMultiplier << "$\n";
-						if (totalWinAmount >= aGeneralRules.maxWinAmountPerTable)
+						std::cout << "\nYou guessed right! which means you win " << bet * myConditions.winMultiplier << "$\n";
+						if (totalWinAmount >= myGeneralRules.maxWinAmountPerTable)
 						{
 							std::cout << "\nYou've won to much at this table and a guard escorts you from it\n";
-							if (aPlayerInfo.allIn)
-							{
-								std::cout << "\n\nThe casino owner scoffs and look away.\nPeople applaud while you are being paid out\n";
-							}
+							IOHandler::HandleAllInWin(myPLayerInfo);
 
-							if (totalWinAmount >= aGeneralRules.maxWinAmountPerTable)
+							if (totalWinAmount >= myGeneralRules.maxWinAmountPerTable)
 							{
 								std::cout << "\nYou've won to much at this table and a guard escorts you from it\n";
 								IOHandler::PauseThenClearScreen();
@@ -149,13 +155,13 @@ namespace GuessTheSquare
 					}
 					else
 					{
-						GameUtilities::AddStatisticsToLastFiveGamesArray(aPlayerInfo, -bet);
+						myPLayerInfo.AddStatisticsToLastFiveGames( -bet);
 						valueChangeAmount -= bet;
-						DisplaySquares(aSquareArray, aSquareArraySize, indexGuess);
+						DisplaySquares(indexGuess);
 						std::cout << "\nIt's empty...\n";
 						IOHandler::PauseThenClearScreen();
 
-						DisplaySquares(aSquareArray, aSquareArraySize, indexWithStarIn);
+						DisplaySquares( indexWithStarIn);
 						std::cout << "\nThe right value is in box " << indexWithStarIn + 1 << " and you lost " << bet << "$\n";
 						IOHandler::PauseThenClearScreen();
 					}
@@ -167,14 +173,15 @@ namespace GuessTheSquare
 				}
 			}
 
-			if (!GameUtilities::CheckPlayerHasMoney(aPlayerInfo))
+			if (!myPLayerInfo.HasMoney())
 			{
 				return;
 			}
-			aPlayerInfo.allIn = false;
+			myPLayerInfo.SetAllIn(false);
 
-			GameUtilities::DisplayLastFiveGameStatistics(aPlayerInfo);
+			myPLayerInfo.DisplayLastFiveGameStatistics();
 			std::cout << "\nPlay again?(y/n):";
 		}
 	}
+
 }

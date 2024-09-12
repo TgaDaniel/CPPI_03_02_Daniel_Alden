@@ -17,7 +17,7 @@ namespace RockPaperScissors
 
 	void DisplayRockPaperScissorsGameStatBoard(const RockPaperScissors aPlayerHand,
 		const RockPaperScissors aOpponentHand,
-		int aBet, const GameUtilities::PlayerInformation& aPLayerInformation,
+		int aBet, const Player::PlayerInformation& aPLayerInformation,
 		bool aHiddenOpponent = false)
 	{
 		std::cout
@@ -36,13 +36,13 @@ namespace RockPaperScissors
 						? "PAPER"
 						: "SCISSORS")))
 			<< "\n	-----------------------\n"
-			<< "	Money: " << aPLayerInformation.money << "$"
+			<< "	Money: " << aPLayerInformation.GetMoney() << "$"
 			<< "\n	-----------------------\n"
 			<< "	Bet: " << aBet << "$"
 			<< "\n	-----------------------\n";
 	}
 
-	void RockPaperScissorsGame(const GameUtilities::GameConditions aConditions, const GameUtilities::GeneralCasinoRules aGeneralRules, GameUtilities::PlayerInformation& aPlayerInformation)
+	void RockPaperScissorsGame(const GameUtilities::GameConditions aConditions, const GameUtilities::GeneralCasinoRules aGeneralRules, Player::PlayerInformation& aPlayerInformation)
 	{
 		static int totalWinAmount;
 		static int totalValueChange;
@@ -171,18 +171,15 @@ namespace RockPaperScissors
 					DisplayRockPaperScissorsGameStatBoard(playerHand, opponentHand, amountBet, aPlayerInformation);
 					if (playerHasWinningHand)
 					{
-						aPlayerInformation.money += amountBet * aConditions.winMultiplier;
+						aPlayerInformation.IncrementallyChangeMoney(amountBet * aConditions.winMultiplier);
 						totalWinAmount += (amountBet * aConditions.winMultiplier) - amountBet;
 						totalValueChange += (amountBet * aConditions.winMultiplier) - amountBet;
-						GameUtilities::AddStatisticsToLastFiveGamesArray(aPlayerInformation, amountBet * aConditions.winMultiplier);
+						aPlayerInformation.AddStatisticsToLastFiveGames( amountBet * aConditions.winMultiplier);
 
 						std::cout << "Which means you WON!\n"
 							<< "You win " << amountBet * aConditions.winMultiplier << "$\n";
 
-						if (aPlayerInformation.allIn)
-						{
-							std::cout << "\n\nThe casino owner scoffs and look away.\nPeople applaud while you are being paid out\n";
-						}
+						IOHandler::HandleAllInWin(aPlayerInformation);
 
 						if (totalWinAmount >= aGeneralRules.maxWinAmountPerTable)
 						{
@@ -195,15 +192,16 @@ namespace RockPaperScissors
 					{
 
 						totalValueChange -= (amountBet * aConditions.winMultiplier) - amountBet;
-						GameUtilities::AddStatisticsToLastFiveGamesArray(aPlayerInformation, -amountBet);
+						aPlayerInformation.AddStatisticsToLastFiveGames( -amountBet);
 
 						std::cout << "Which means you LOSE!\n"
 							<< "You lose " << amountBet << "$\n";
 					}
 
 					IOHandler::PauseThenClearScreen();
-					GameUtilities::DisplayLastFiveGameStatistics(aPlayerInformation);
-					GameUtilities::DisplayMoney(aPlayerInformation.money);
+					aPlayerInformation.DisplayLastFiveGameStatistics();
+					IOHandler::HandleAllInWin(aPlayerInformation);
+					aPlayerInformation.DisplayMoney();
 					std::cout << "\nPlay again?(y/n): ";
 				}
 				else
@@ -212,11 +210,10 @@ namespace RockPaperScissors
 					std::cout << "\nInvalid input...\n";
 					IOHandler::PauseThenClearScreen();
 				}
-				if (!GameUtilities::CheckPlayerHasMoney(aPlayerInformation))
+				if (!aPlayerInformation.HasMoney())
 				{
 					return;
 				}
-				aPlayerInformation.allIn = false;
 			}
 		}
 		std::cout << "\nSee you soon\n";

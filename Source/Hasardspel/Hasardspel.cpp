@@ -4,7 +4,7 @@
 #include "GameUtilities.h"
 #include "IOHandler.h"
 
-#include "GuessTheNumberGame.h"
+#include "GuessTheNumberTable.h"
 #include "OddEvenGame.h"
 #include "RockPaperScissorsGame.h"
 #include "GuessTheSquareGame.h"
@@ -53,7 +53,7 @@ int main()
 			switch (static_cast<Tables>(userInput)) {
 				case Tables::NumberGuessingTable:
 				{
-					GuessTheNumber::GuessTheNumberGame({ 1,6,4 }, player, rules);
+					GuessTheNumber::Play({ 1,6,4 }, player, rules);
 					break;
 				}
 				case Tables::OddOrEvenTable:
@@ -69,7 +69,7 @@ int main()
 				case Tables::GuessTheSquare:
 				{
 					bool squareArray[5] = { false };
-					GuessTheSquare::GuessTheSquareGame(squareArray, 5, { 1,5,3 }, player, rules);
+					GuessTheSquare::Play(squareArray, 5, { 1,5,3 }, player, rules);
 					break;
 				}
 				case Tables::Roulette:

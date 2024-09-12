@@ -135,6 +135,7 @@
     <ClCompile Include="GameUtilities.cpp" />
     <ClCompile Include="Hasardspel.cpp" />
     <ClCompile Include="IOHandler.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RanomHandler.cpp" />
     <ClCompile Include="RockPaperScissorsGame.cpp" />
     <ClCompile Include="RouletteGame.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="GuessTheSquareGame.h" />
     <ClInclude Include="IOHandler.h" />
     <ClInclude Include="OddEvenGame.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RandomHandler.h" />
     <ClInclude Include="RockPaperScissorsGame.h" />
     <ClInclude Include="RouletteGame.h" />

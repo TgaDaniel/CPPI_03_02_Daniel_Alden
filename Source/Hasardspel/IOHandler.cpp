@@ -30,12 +30,12 @@ namespace IOHandler
 		return true;
 	}
 
-	void HandleAllInWin(GameUtilities::PlayerInformation& aPlayer)
+	void HandleAllInWin(Player::PlayerInformation& aPlayer)
 	{
-		if (aPlayer.allIn)
+		if (aPlayer.GetAllIn())
 		{
 			std::cout << "\n\nThe casino owner scoffs and look away.\nPeople applaud while you are being paid out\n";
-			aPlayer.allIn = false;
+			aPlayer.SetAllIn(false);
 		}
 	}
 

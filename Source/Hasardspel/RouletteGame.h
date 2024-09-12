@@ -1,5 +1,6 @@
 #pragma once
 #include "GameUtilities.h"
+#include "Player.h"
 
 namespace Roulette
 {
@@ -17,6 +18,6 @@ namespace Roulette
 		int columnwinMultiplier = 2;
 	};
 
-	void RouletteGame(RouletteConditions aConditions, GameUtilities::GeneralCasinoRules aGeneralRules, GameUtilities::PlayerInformation& aPLayerInfo);
+	void RouletteGame(RouletteConditions aConditions, GameUtilities::GeneralCasinoRules aGeneralRules, Player::PlayerInformation& aPLayerInfo);
 
 }

@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Games">
+      <UniqueIdentifier>{05171376-0ae7-4078-bb8b-a32ca1267d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Games">
+      <UniqueIdentifier>{e0db927a-0cd9-4da5-aa51-14c6777657b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Hasardspel.cpp">
@@ -27,19 +33,22 @@
     <ClCompile Include="RanomHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OddEvenGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GuessTheNumberGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RockPaperScissorsGame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Games</Filter>
     </ClCompile>
     <ClCompile Include="GuessTheSquareGame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Games</Filter>
+    </ClCompile>
+    <ClCompile Include="OddEvenGame.cpp">
+      <Filter>Source Files\Games</Filter>
+    </ClCompile>
+    <ClCompile Include="RockPaperScissorsGame.cpp">
+      <Filter>Source Files\Games</Filter>
     </ClCompile>
     <ClCompile Include="RouletteGame.cpp">
+      <Filter>Source Files\Games</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,19 +62,22 @@
     <ClInclude Include="RandomHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OddEvenGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GuessTheNumberGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RockPaperScissorsGame.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Games</Filter>
     </ClInclude>
     <ClInclude Include="GuessTheSquareGame.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Games</Filter>
+    </ClInclude>
+    <ClInclude Include="OddEvenGame.h">
+      <Filter>Header Files\Games</Filter>
+    </ClInclude>
+    <ClInclude Include="RockPaperScissorsGame.h">
+      <Filter>Header Files\Games</Filter>
     </ClInclude>
     <ClInclude Include="RouletteGame.h">
+      <Filter>Header Files\Games</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

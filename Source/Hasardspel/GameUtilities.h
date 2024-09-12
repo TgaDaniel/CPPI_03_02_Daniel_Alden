@@ -1,13 +1,8 @@
 #pragma once
+#include "Player.h"
+
 namespace GameUtilities
 {
-	struct PlayerInformation
-	{
-		int money = 500;
-		int lastFiveGamesStatistics[5] = {0};
-		bool allIn = false;
-
-	};
 
 	struct GeneralCasinoRules
 	{
@@ -23,15 +18,7 @@ namespace GameUtilities
 		int winMultiplier;
 	};
 
-	void DisplayLastFiveGameStatistics(const PlayerInformation& aPlayerInfo);
-
-	void AddStatisticsToLastFiveGamesArray(PlayerInformation& aPlayerInfo, int aMoney);
-
-	void DisplayMoney(const int aPlayerMoney);
-
-	int HandleBetting(PlayerInformation& aPlayerInfo);
-
-	bool CheckPlayerHasMoney(const PlayerInformation& aPLayerInfo);
+	int HandleBetting(Player::PlayerInformation& aPlayerInfo);
 
 	bool CheckIfEven(int aValue);
 

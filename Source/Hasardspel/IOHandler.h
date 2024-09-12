@@ -6,5 +6,5 @@ namespace IOHandler
 	bool ValidateInput();
 	bool TwoCharacterOptionInput(char aTrueChar, char aFalseChar);
 	void ReactionText(const GameUtilities::GeneralCasinoRules& aGeneralRules, int aTableValueChange);
-	void HandleAllInWin(GameUtilities::PlayerInformation& aPlayer);
+	void HandleAllInWin(Player::PlayerInformation& aPlayer);
 }

@@ -151,11 +151,11 @@ namespace Roulette
 		return aNumber % columns;
 	}
 
-	void DisplayPlayerBets(GameUtilities::PlayerInformation& aPlayerInformation, BetType aBetType, int aGuess, int aBet, bool aDisplayWinning = false, int aWinningNumber = 0)
+	void DisplayPlayerBets(Player::PlayerInformation& aPlayerInformation, BetType aBetType, int aGuess, int aBet, bool aDisplayWinning = false, int aWinningNumber = 0)
 	{
 		std::cout << "\n\n	Die Game Stats--------\n"
 			<< "	-----------------------\n"
-			<< "	Money: " << aPlayerInformation.money << "$"
+			<< "	Money: " << aPlayerInformation.GetMoney() << "$"
 			<< "\n	-----------------------\n"
 			<< "	Bet: " << aBet << "$"
 			<< "\n	-----------------------\n";
@@ -208,33 +208,33 @@ namespace Roulette
 		}
 	}
 
-	void HandleWinnings(GameUtilities::PlayerInformation& aPLayer, int aWinMultiplier, int aBet, int& aTotalWinAmountAtTable, int& aValueChangeAtTable)
+	void HandleWinnings(Player::PlayerInformation& aPLayer, int aWinMultiplier, int aBet, int& aTotalWinAmountAtTable, int& aValueChangeAtTable)
 	{
 		int winnings{ aBet * aWinMultiplier };
 
 		aTotalWinAmountAtTable += winnings - aBet;
 		aValueChangeAtTable += winnings - aBet;
 
-		aPLayer.money += winnings;
-		GameUtilities::AddStatisticsToLastFiveGamesArray(aPLayer, winnings);
+		aPLayer.IncrementallyChangeMoney(winnings);
+		aPLayer.AddStatisticsToLastFiveGames( winnings);
 
 		std::cout << "\nYou won " << winnings << "$\n";
 		IOHandler::PauseThenClearScreen();
 	}
 
-	void HandleLoss(GameUtilities::PlayerInformation& aPLayer, int aBet, int& aValueChangeAtTable)
+	void HandleLoss(Player::PlayerInformation& aPLayer, int aBet, int& aValueChangeAtTable)
 	{
 
 		aValueChangeAtTable -= aBet;
 
-		GameUtilities::AddStatisticsToLastFiveGamesArray(aPLayer, -aBet);
+		aPLayer.AddStatisticsToLastFiveGames( -aBet);
 
 		std::cout << "\nYou lost " << aBet << "$\n";
 		IOHandler::PauseThenClearScreen();
 
 	}
 
-	void RouletteGame(RouletteConditions aConditions, GameUtilities::GeneralCasinoRules aGeneralRules, GameUtilities::PlayerInformation& aPLayerInfo)
+	void RouletteGame(RouletteConditions aConditions, GameUtilities::GeneralCasinoRules aGeneralRules, Player::PlayerInformation& aPLayerInfo)
 	{
 
 		CellValues gameBoard[BOARD_COLUMN_SIZE][BOARD_ROW_SIZE];
@@ -477,7 +477,7 @@ namespace Roulette
 					break;
 				}
 			}
-			if(!GameUtilities::CheckPlayerHasMoney(aPLayerInfo))
+			if(!aPLayerInfo.HasMoney())
 			{
 				return;
 			}
@@ -487,7 +487,7 @@ namespace Roulette
 				IOHandler::PauseThenClearScreen();
 				return;
 			}
-			GameUtilities::DisplayLastFiveGameStatistics(aPLayerInfo);
+			aPLayerInfo.DisplayLastFiveGameStatistics();
 			IOHandler::PauseThenClearScreen();
 		}
 	}
