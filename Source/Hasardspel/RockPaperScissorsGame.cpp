@@ -1,53 +1,53 @@
 #include <iostream>
 
 #include "RockPaperScissorsGame.h"
-
 #include "GameUtilities.h"
 #include "IOHandler.h"
 #include "RandomHandler.h"
 
 namespace RockPaperScissors
 {
-	enum class RockPaperScissors
-	{
-		Rock = 1,
-		Paper,
-		Scissors
-	};
 
-	void DisplayRockPaperScissorsGameStatBoard(const RockPaperScissors aPlayerHand,
-		const RockPaperScissors aOpponentHand,
-		int aBet, const Player::PlayerInformation& aPLayerInformation,
-		bool aHiddenOpponent = false)
+	void RockPaperScissorsTable::DisplayRockPaperScissorsGameStatBoard(bool aHiddenOpponent)
 	{
 		std::cout
 			<< "	-----------------------\n"
-			<< "	Player hand: " << (aPlayerHand == RockPaperScissors::Rock
+			<< "	Player hand: " << (myPlayerHand == SelectHand::Rock
 				? "ROCK"
-				: (aPlayerHand == RockPaperScissors::Paper
+				: (myPlayerHand == SelectHand::Paper
 					? "PAPER"
 					: "SCISSORS"))
 			<< "\n	-----------------------\n"
 			<< "	OPPONENT HAND 1: " << (aHiddenOpponent
 				? "Not revealed"
-				: (aOpponentHand == RockPaperScissors::Rock
+				: (myPlayerHand == SelectHand::Rock
 					? "ROCK"
-					: (aOpponentHand == RockPaperScissors::Paper
+					: (myPlayerHand == SelectHand::Paper
 						? "PAPER"
 						: "SCISSORS")))
 			<< "\n	-----------------------\n"
-			<< "	Money: " << aPLayerInformation.GetMoney() << "$"
+			<< "	Money: " << myPLayerInfo.GetMoney() << "$"
 			<< "\n	-----------------------\n"
-			<< "	Bet: " << aBet << "$"
+			<< "	Bet: " << myBet << "$"
 			<< "\n	-----------------------\n";
 	}
 
-	void RockPaperScissorsGame(const GameUtilities::GameConditions aConditions, const GameUtilities::GeneralCasinoRules aGeneralRules, Player::PlayerInformation& aPlayerInformation)
+	RockPaperScissorsTable::RockPaperScissorsTable(GameUtilities::GameConditions aConditions,
+		Player::PlayerInformation aPlayerInfo, GameUtilities::GeneralCasinoRules aRules)
+		: myConditions(aConditions), myPLayerInfo(aPlayerInfo), myGeneralRules(aRules)
 	{
-		static int totalWinAmount;
-		static int totalValueChange;
+		myBet = 0;
+		myPlayerHand = SelectHand::Rock;
+		myTotalValueChange = 0;
+		myTotalWinAmount = 0;
 
-		if (totalWinAmount >= aGeneralRules.maxWinAmountPerTable)
+	}
+
+	void RockPaperScissorsTable::Play()
+	{
+		
+
+		if (myTotalWinAmount >= myGeneralRules.maxWinAmountPerTable)
 		{
 			std::cout << "\nYou can't play at this table anymore punk!\n";
 			IOHandler::PauseThenClearScreen();
@@ -58,18 +58,8 @@ namespace RockPaperScissors
 
 		std::cout << "\nWelcome to the Rock Paper Scissors table!\n";
 
-		if (totalValueChange <= -aGeneralRules.reactionAmount)
-		{
-			std::cout << "\nBetter luck this time, i'm sure you'll win.\n";
-		}
-		else if (totalValueChange >= aGeneralRules.reactionAmount)
-		{
-			std::cout << "\nThe big winner is back huh? Share some of that luck will ya?\n";
-		}
-		else
-		{
-			std::cout << "\nThis will be fun!\n";
-		}
+		IOHandler::ReactionText(myGeneralRules,myTotalValueChange);
+
 		std::cout << "\nWant to hear the rules?(y/n): ";
 
 		if (IOHandler::TwoCharacterOptionInput('y', 'n'))
@@ -77,7 +67,7 @@ namespace RockPaperScissors
 			std::cout << "It's simple, you choose either rock, paper or scissors and the house also choose one.\n"
 				<< "If your choice beat ours you WIN!\n"
 				<< "But if you choose the same or yours don't bet mine you LOSE!\n"
-				<< "You win " << aConditions.winMultiplier << " times what you bet!\n\n";
+				<< "You win " << myConditions.winMultiplier << " times what you bet!\n\n";
 		}
 
 		std::cout << "Want to play?(y/n): ";
@@ -85,7 +75,7 @@ namespace RockPaperScissors
 		while (IOHandler::TwoCharacterOptionInput('y', 'n'))
 		{
 			system("cls");
-			int amountBet{ GameUtilities::HandleBetting(aPlayerInformation) };
+			myBet = GameUtilities::HandleBetting(myPLayerInfo);
 			bool selectingHand{ true };
 
 			while (selectingHand)
@@ -93,42 +83,42 @@ namespace RockPaperScissors
 
 				system("cls");
 
-				RockPaperScissors opponentHand = static_cast<RockPaperScissors>(RandomHandler::RandomNumberInRange(1, 3));
+				SelectHand opponentHand = static_cast<SelectHand>(RandomHandler::RandomNumberInRange(1, 3));
 				bool playerHasWinningHand{ false };
 
 
-				std::cout << "\nRock[" << static_cast<int>(RockPaperScissors::Rock) << "]\n"
-					<< "Paper[" << static_cast<int>(RockPaperScissors::Paper) << "]\n"
-					<< "Scissors[" << static_cast<int>(RockPaperScissors::Scissors) << "]\n\n"
+				std::cout << "\nRock[" << static_cast<int>(SelectHand::Rock) << "]\n"
+					<< "Paper[" << static_cast<int>(SelectHand::Paper) << "]\n"
+					<< "Scissors[" << static_cast<int>(SelectHand::Scissors) << "]\n\n"
 					<< "Choose: ";
 
 				int playerInput{ 0 };
 				std::cin >> playerInput;
 
-				if (IOHandler::ValidateInput() && playerInput >= aConditions.minRandomValue && playerInput <= aConditions.maxRandomValue)
+				if (IOHandler::ValidateInput() && playerInput >= myConditions.minRandomValue && playerInput <= myConditions.maxRandomValue)
 				{
 					selectingHand = false;
 					system("cls");
 
-					RockPaperScissors playerHand = static_cast<RockPaperScissors>(playerInput);
+					myPlayerHand = static_cast<SelectHand>(playerInput);
 
-					DisplayRockPaperScissorsGameStatBoard(playerHand, opponentHand, amountBet, aPlayerInformation, true);
+					DisplayRockPaperScissorsGameStatBoard(true);
 					std::cout << "Opponent slowly reveals their hand...\n";
 					IOHandler::PauseThenClearScreen();
 
-					DisplayRockPaperScissorsGameStatBoard(playerHand, opponentHand, amountBet, aPlayerInformation);
+					DisplayRockPaperScissorsGameStatBoard();
 
-					if (playerHand == opponentHand)
+					if (myPlayerHand == opponentHand)
 					{
 						std::cout << "\nThe opponent and you have the same hand and the house wins by default\n";
 					}
 					else
 					{
-						switch (playerHand)
+						switch (myPlayerHand)
 						{
-						case RockPaperScissors::Rock:
+						case SelectHand::Rock:
 						{
-							if (opponentHand == RockPaperScissors::Paper)
+							if (opponentHand == SelectHand::Paper)
 							{
 								std::cout << "Rock loses to Paper\n";
 							}
@@ -139,9 +129,9 @@ namespace RockPaperScissors
 							}
 							break;
 						}
-						case RockPaperScissors::Paper:
+						case SelectHand::Paper:
 						{
-							if (opponentHand == RockPaperScissors::Scissors)
+							if (opponentHand == SelectHand::Scissors)
 							{
 								std::cout << "Paper loses to Scissors\n";
 							}
@@ -152,9 +142,9 @@ namespace RockPaperScissors
 							}
 							break;
 						}
-						case RockPaperScissors::Scissors:
+						case SelectHand::Scissors:
 						{
-							if (opponentHand == RockPaperScissors::Rock)
+							if (opponentHand == SelectHand::Rock)
 							{
 								std::cout << "Scissors loses to Rock\n";
 							}
@@ -168,20 +158,20 @@ namespace RockPaperScissors
 						}
 					}
 					IOHandler::PauseThenClearScreen();
-					DisplayRockPaperScissorsGameStatBoard(playerHand, opponentHand, amountBet, aPlayerInformation);
+					DisplayRockPaperScissorsGameStatBoard();
 					if (playerHasWinningHand)
 					{
-						aPlayerInformation.IncrementallyChangeMoney(amountBet * aConditions.winMultiplier);
-						totalWinAmount += (amountBet * aConditions.winMultiplier) - amountBet;
-						totalValueChange += (amountBet * aConditions.winMultiplier) - amountBet;
-						aPlayerInformation.AddStatisticsToLastFiveGames( amountBet * aConditions.winMultiplier);
+						myPLayerInfo.IncrementallyChangeMoney(myBet * myConditions.winMultiplier);
+						myTotalWinAmount += (myBet * myConditions.winMultiplier) - myBet;
+						myTotalValueChange += (myBet * myConditions.winMultiplier) - myBet;
+						myPLayerInfo.AddStatisticsToLastFiveGames(myBet* myConditions.winMultiplier);
 
 						std::cout << "Which means you WON!\n"
-							<< "You win " << amountBet * aConditions.winMultiplier << "$\n";
+							<< "You win " << myBet * myConditions.winMultiplier << "$\n";
 
-						IOHandler::HandleAllInWin(aPlayerInformation);
+						IOHandler::HandleAllInWin(myPLayerInfo);
 
-						if (totalWinAmount >= aGeneralRules.maxWinAmountPerTable)
+						if (myTotalWinAmount >= myGeneralRules.maxWinAmountPerTable)
 						{
 							std::cout << "\nYou've won to much at this table and a guard escorts you from it\n";
 							IOHandler::PauseThenClearScreen();
@@ -191,17 +181,17 @@ namespace RockPaperScissors
 					else
 					{
 
-						totalValueChange -= (amountBet * aConditions.winMultiplier) - amountBet;
-						aPlayerInformation.AddStatisticsToLastFiveGames( -amountBet);
+						myTotalValueChange -= (myBet * myConditions.winMultiplier) - myBet;
+						myPLayerInfo.AddStatisticsToLastFiveGames( -myBet);
 
 						std::cout << "Which means you LOSE!\n"
-							<< "You lose " << amountBet << "$\n";
+							<< "You lose " << myBet << "$\n";
 					}
 
 					IOHandler::PauseThenClearScreen();
-					aPlayerInformation.DisplayLastFiveGameStatistics();
-					IOHandler::HandleAllInWin(aPlayerInformation);
-					aPlayerInformation.DisplayMoney();
+					myPLayerInfo.DisplayLastFiveGameStatistics();
+					IOHandler::HandleAllInWin(myPLayerInfo);
+					myPLayerInfo.DisplayMoney();
 					std::cout << "\nPlay again?(y/n): ";
 				}
 				else
@@ -210,7 +200,7 @@ namespace RockPaperScissors
 					std::cout << "\nInvalid input...\n";
 					IOHandler::PauseThenClearScreen();
 				}
-				if (!aPlayerInformation.HasMoney())
+				if (!myPLayerInfo.HasMoney())
 				{
 					return;
 				}

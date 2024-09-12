@@ -7,30 +7,14 @@
 
 namespace Roulette
 {
-	//Number
-	//column
-	//Color
-	//odd or even
 
-
-	enum class BetType
-	{
-		Straight = 1,
-		Color,
-		OddOrEven,
-		Column,
-		Leave
-	};
-
-	constexpr int BOARD_COLUMN_SIZE{ 3 };
-	constexpr int BOARD_ROW_SIZE{ 12 };
 
 	/// <summary>
 	/// Calulates if number is at a red position on board
 	/// </summary>
 	/// <param name="aNumber">Number to find out if it is red</param>
 	/// <returns>True if it is red</returns>
-	bool CalculateIfNumberIsRed(int aNumber)
+	bool RouletteTable::CalculateIfNumberIsRed(int aNumber)
 	{
 		constexpr int redIsOddInRangeAmount{ 2 };
 		int redIsOddStartRanges[redIsOddInRangeAmount] = { 1,19 };
@@ -52,10 +36,9 @@ namespace Roulette
 	}
 
 	/// <summary>
-	/// Adds the roulette game board values to a game board.
+	/// Adds the roulette game board values to a <c>myGameBoard</c>.
 	/// </summary>
-	/// <param name="aGameBoard"></param>
-	void InitializeRouletteBoard(CellValues aGameBoard[BOARD_COLUMN_SIZE][BOARD_ROW_SIZE])
+	void RouletteTable::InitializeRouletteBoard()
 	{
 		constexpr int step{ 3 };
 
@@ -69,14 +52,14 @@ namespace Roulette
 			for (int rowIndex = 0; rowIndex < BOARD_ROW_SIZE; ++rowIndex)
 			{
 				bool isRed{ CalculateIfNumberIsRed(cellNumber) };
-				aGameBoard[columnIndex][rowIndex] = { cellNumber, isRed };
+				myGameBoard[columnIndex][rowIndex] = { cellNumber, isRed };
 
 				cellNumber += step;
 			}
 		}
 	}
 
-	void DisplayGameBoard(CellValues aGameBoard[BOARD_COLUMN_SIZE][BOARD_ROW_SIZE], bool aShowBallPosition = false, int aWinningNr = 0)
+	void RouletteTable::DisplayGameBoard(bool aShowBallPosition, int aWinningNr)
 	{
 
 		std::cout << "\n--------------------------------------------------------------------------------------\n";
@@ -94,13 +77,13 @@ namespace Roulette
 
 			for (int rowIndex = 0; rowIndex < BOARD_ROW_SIZE; rowIndex++)
 			{
-				if (aWinningNr == aGameBoard[columnIndex][rowIndex].cellNumber && aShowBallPosition)
+				if (aWinningNr == myGameBoard[columnIndex][rowIndex].cellNumber && aShowBallPosition)
 				{
-					std::cout << (aGameBoard[columnIndex][rowIndex].isRed ? "\33[41m" : "\33[0m") << "| \33[5mX" << (aGameBoard[columnIndex][rowIndex].isRed ? "\33[41m" : "\33[0m") << " |\33[0m ";
+					std::cout << (myGameBoard[columnIndex][rowIndex].isRed ? "\33[41m" : "\33[0m") << "| \33[5mX" << (myGameBoard[columnIndex][rowIndex].isRed ? "\33[41m" : "\33[0m") << " |\33[0m ";
 				}
 				else
 				{
-					std::cout << (aGameBoard[columnIndex][rowIndex].isRed ? "\33[41m" : "\33[0m") << "| " << aGameBoard[columnIndex][rowIndex].cellNumber << " |\33[0m ";
+					std::cout << (myGameBoard[columnIndex][rowIndex].isRed ? "\33[41m" : "\33[0m") << "| " << myGameBoard[columnIndex][rowIndex].cellNumber << " |\33[0m ";
 				}
 			}
 			int columnDisplayNumber{ columnIndex + 1 };
@@ -111,19 +94,19 @@ namespace Roulette
 
 	}
 
-	BetType ChooseBetType(RouletteConditions aConditions, CellValues aBoard[3][12])
+	BetType RouletteTable::ChooseBetType()
 	{
 		while (true)
 		{
-			DisplayGameBoard(aBoard);
+			DisplayGameBoard();
 
 			constexpr int options{ 5 };
 
 			std::cout << "\nWhat do you want to bet on?\n"
-				<< " [" << static_cast<int>(BetType::Straight) << "] Straight (guess on exact number it will land on) | Win " << aConditions.straightWinMultiplier << "X your bet\n"
-				<< " [" << static_cast<int>(BetType::Color) << "] Color (Guess the Color it will land on) | Win " << aConditions.colorWinMultiplier << "X your bet\n"
-				<< " [" << static_cast<int>(BetType::OddOrEven) << "] Odd or even number | Win " << aConditions.oddEvenWinMultiplier << "X your money\n"
-				<< " [" << static_cast<int>(BetType::Column) << "] Column (Guess the column it will land on) | Win " << aConditions.columnwinMultiplier << "X your bet\n"
+				<< " [" << static_cast<int>(BetType::Straight) << "] Straight (guess on exact number it will land on) | Win " << myConditions.straightWinMultiplier << "X your bet\n"
+				<< " [" << static_cast<int>(BetType::Color) << "] Color (Guess the Color it will land on) | Win " << myConditions.colorWinMultiplier << "X your bet\n"
+				<< " [" << static_cast<int>(BetType::OddOrEven) << "] Odd or even number | Win " << myConditions.oddEvenWinMultiplier << "X your money\n"
+				<< " [" << static_cast<int>(BetType::Column) << "] Column (Guess the column it will land on) | Win " << myConditions.columnwinMultiplier << "X your bet\n"
 				<< " [" << static_cast<int>(BetType::Leave) << "] Leave table\n"
 				<< "Input: ";
 
@@ -141,7 +124,7 @@ namespace Roulette
 		}
 	}
 
-	int CalculateColumn(int aNumber)
+	int RouletteTable::CalculateColumn(int aNumber)
 	{
 		int columns{ 3 };
 
@@ -151,13 +134,13 @@ namespace Roulette
 		return aNumber % columns;
 	}
 
-	void DisplayPlayerBets(Player::PlayerInformation& aPlayerInformation, BetType aBetType, int aGuess, int aBet, bool aDisplayWinning = false, int aWinningNumber = 0)
+	void RouletteTable::DisplayPlayerBets(BetType aBetType, int aGuess, bool aDisplayWinning, int aWinningNumber)
 	{
 		std::cout << "\n\n	Die Game Stats--------\n"
 			<< "	-----------------------\n"
-			<< "	Money: " << aPlayerInformation.GetMoney() << "$"
+			<< "	Money: " << myPLayerInfo.GetMoney() << "$"
 			<< "\n	-----------------------\n"
-			<< "	Bet: " << aBet << "$"
+			<< "	Bet: " << myBet << "$"
 			<< "\n	-----------------------\n";
 
 		switch (aBetType)
@@ -187,7 +170,7 @@ namespace Roulette
 				std::cout
 					<< "	Player guess: " << (aGuess > 0 ? "Even" : "Odd")
 					<< "\n	-----------------------\n"
-					<< "	Ball: " <<  ( aDisplayWinning ? (GameUtilities::CheckIfEven(aWinningNumber) ? "Even" : "Odd") : "Not rolled yet")
+					<< "	Ball: " << (aDisplayWinning ? (GameUtilities::CheckIfEven(aWinningNumber) ? "Even" : "Odd") : "Not rolled yet")
 					<< "\n	-----------------------\n\n";
 
 				break;
@@ -208,42 +191,43 @@ namespace Roulette
 		}
 	}
 
-	void HandleWinnings(Player::PlayerInformation& aPLayer, int aWinMultiplier, int aBet, int& aTotalWinAmountAtTable, int& aValueChangeAtTable)
+	void RouletteTable::HandleWinnings(int aWinMultiplier)
 	{
-		int winnings{ aBet * aWinMultiplier };
+		int winnings{ myBet * aWinMultiplier };
 
-		aTotalWinAmountAtTable += winnings - aBet;
-		aValueChangeAtTable += winnings - aBet;
+		myTotalWinAmount += winnings - myBet;
+		myValueChange += winnings - myBet;
 
-		aPLayer.IncrementallyChangeMoney(winnings);
-		aPLayer.AddStatisticsToLastFiveGames( winnings);
+		myPLayerInfo.IncrementallyChangeMoney(winnings);
+		myPLayerInfo.AddStatisticsToLastFiveGames(winnings);
 
 		std::cout << "\nYou won " << winnings << "$\n";
 		IOHandler::PauseThenClearScreen();
 	}
 
-	void HandleLoss(Player::PlayerInformation& aPLayer, int aBet, int& aValueChangeAtTable)
+	void RouletteTable::HandleLoss()
 	{
 
-		aValueChangeAtTable -= aBet;
+		myValueChange -= myBet;
 
-		aPLayer.AddStatisticsToLastFiveGames( -aBet);
+		myPLayerInfo.AddStatisticsToLastFiveGames(-myBet);
 
-		std::cout << "\nYou lost " << aBet << "$\n";
+		std::cout << "\nYou lost " << myBet << "$\n";
 		IOHandler::PauseThenClearScreen();
 
 	}
 
-	void RouletteGame(RouletteConditions aConditions, GameUtilities::GeneralCasinoRules aGeneralRules, Player::PlayerInformation& aPLayerInfo)
+	RouletteTable::RouletteTable(const RouletteConditions& aConditions, Player::PlayerInformation& aPLayerInfo,
+		const GameUtilities::GeneralCasinoRules aGeneralRules)
+		: myConditions(aConditions), myPLayerInfo(aPLayerInfo), myGeneralRules(aGeneralRules)
 	{
+		InitializeRouletteBoard();
+		myBet = 0;
+	}
 
-		CellValues gameBoard[BOARD_COLUMN_SIZE][BOARD_ROW_SIZE];
-		InitializeRouletteBoard(gameBoard);
-
-		static int totalWinAmount{ 0 };
-		static int valueChange{ 0 };
-
-		if (totalWinAmount > aGeneralRules.maxWinAmountPerTable)
+	void RouletteTable::Play()
+	{
+		if (myTotalWinAmount > myGeneralRules.maxWinAmountPerTable)
 		{
 			std::cout << "\nYou are not welcome at this table!\n";
 			IOHandler::PauseThenClearScreen();
@@ -254,9 +238,9 @@ namespace Roulette
 
 		std::cout << "\nWelcome to the Roulette table!\n";
 
-		IOHandler::ReactionText(aGeneralRules, valueChange);
+		IOHandler::ReactionText(myGeneralRules, myValueChange);
 
-		std::cout << "Want to hear the rules?(y/n):"; 
+		std::cout << "Want to hear the rules?(y/n):";
 
 		if (IOHandler::TwoCharacterOptionInput('y', 'n'))
 		{
@@ -271,19 +255,19 @@ namespace Roulette
 
 		while (playing)
 		{
-			int bet;
+
 			int winningNumber = RandomHandler::RandomNumberInRange(0, (BOARD_COLUMN_SIZE * BOARD_ROW_SIZE));
 
 			system("cls");
 
-			BetType playerChoosenBetType = ChooseBetType(aConditions, gameBoard);
+			BetType playerChoosenBetType = ChooseBetType();
 
 			switch (playerChoosenBetType)
 			{
 				case BetType::Straight:
 				{
 
-					bet = GameUtilities::HandleBetting(aPLayerInfo);
+					myBet = GameUtilities::HandleBetting(myPLayerInfo);
 
 					system("cls");
 					int playerGuess{ 0 };
@@ -293,8 +277,8 @@ namespace Roulette
 					while (guessing)
 					{
 
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet);
-						DisplayGameBoard(gameBoard);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess);
+						DisplayGameBoard();
 
 						std::cout << "\nWhich number do you think the ball will land on?: ";
 						std::cin >> playerGuess;
@@ -311,38 +295,38 @@ namespace Roulette
 
 					system("cls");
 
-					DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet);
-					DisplayGameBoard(gameBoard);
+					DisplayPlayerBets(playerChoosenBetType, playerGuess);
+					DisplayGameBoard();
 
 					std::cout << "\nNext the ball will be thrown out and rolled onto the board...\n";
 					IOHandler::PauseThenClearScreen();
 
 					if (playerGuess == winningNumber)
 					{
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet, true, winningNumber);
-						DisplayGameBoard(gameBoard, true, winningNumber);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess, true, winningNumber);
+						DisplayGameBoard(true, winningNumber);
 						std::cout << "\nYou won with your guess " << playerGuess << "!!!\n";
-						IOHandler::HandleAllInWin(aPLayerInfo);
-						HandleWinnings(aPLayerInfo, aConditions.straightWinMultiplier, bet, totalWinAmount, valueChange);
+						IOHandler::HandleAllInWin(myPLayerInfo);
+						HandleWinnings(myConditions.straightWinMultiplier);
 					}
 					else
 					{
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet, true, winningNumber);
-						DisplayGameBoard(gameBoard, true, winningNumber);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess, true, winningNumber);
+						DisplayGameBoard(true, winningNumber);
 						std::cout << "\nYou lost with your guess " << playerGuess << "!!!\n";
-						HandleLoss(aPLayerInfo,bet,valueChange);
+						HandleLoss();
 					}
 					break;
 				}
 				case BetType::Color:
 				{
-					bet = GameUtilities::HandleBetting(aPLayerInfo);
+					myBet = GameUtilities::HandleBetting(myPLayerInfo);
 					system("cls");
 
 					bool playerGuess{ false };
 
-					DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet);
-					DisplayGameBoard(gameBoard);
+					DisplayPlayerBets(playerChoosenBetType, playerGuess);
+					DisplayGameBoard();
 
 					std::cout << "\n    Which color du you think it will land on?"
 						"\n    [R]ed or [B]lack: ";
@@ -351,8 +335,8 @@ namespace Roulette
 
 					system("cls");
 
-					DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet);
-					DisplayGameBoard(gameBoard);
+					DisplayPlayerBets(playerChoosenBetType, playerGuess);
+					DisplayGameBoard();
 
 					std::cout << "\nNow it is time for the ball to be rolled onto the board...\n";
 
@@ -363,56 +347,56 @@ namespace Roulette
 
 						std::cout << "You won with your guess on " << (playerGuess ? "red" : "black") << "!!!\n";
 
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet, true, winningNumber);
-						DisplayGameBoard(gameBoard, true, winningNumber);
-						IOHandler::HandleAllInWin(aPLayerInfo);
-						HandleWinnings(aPLayerInfo, aConditions.colorWinMultiplier, bet, totalWinAmount, valueChange);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess, true, winningNumber);
+						DisplayGameBoard(true, winningNumber);
+						IOHandler::HandleAllInWin(myPLayerInfo);
+						HandleWinnings(myConditions.colorWinMultiplier);
 					}
 					else
 					{
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet, true, winningNumber);
-						DisplayGameBoard(gameBoard, true, winningNumber);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess, true, winningNumber);
+						DisplayGameBoard(true, winningNumber);
 						std::cout << "\nYou lost with your guess...\n";
-						HandleLoss(aPLayerInfo, bet, valueChange);
+						HandleLoss();
 					}
 					break;
 				}
 				case BetType::OddOrEven:
 				{
-					bet = GameUtilities::HandleBetting(aPLayerInfo);
+					myBet = GameUtilities::HandleBetting(myPLayerInfo);
 					system("cls");
 
-					bool playerGuess{false};
+					bool playerGuess{ false };
 					system("cls");
 
-					DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet);
-					DisplayGameBoard(gameBoard);
+					DisplayPlayerBets(playerChoosenBetType, playerGuess);
+					DisplayGameBoard();
 
 					std::cout << "\n	What do you think the ball will land on?\n	 [E]ven or [O]dd number?: ";
 
 					playerGuess = IOHandler::TwoCharacterOptionInput('E', 'O');
 
 					system("cls");
-					DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet);
-					DisplayGameBoard(gameBoard);
+					DisplayPlayerBets(playerChoosenBetType, playerGuess);
+					DisplayGameBoard();
 					std::cout << "The ball is about to be rolled...\n";
 					IOHandler::PauseThenClearScreen();
 
 					if (winningNumber > 0 && playerGuess == GameUtilities::CheckIfEven(winningNumber))
 					{
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet, true, winningNumber);
-						DisplayGameBoard(gameBoard, true, winningNumber);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess, true, winningNumber);
+						DisplayGameBoard(true, winningNumber);
 						std::cout << "You won with a guess for " << (playerGuess ? "Even" : "Odd") << " since the ball stopped on " << winningNumber << "\n";
-						IOHandler::HandleAllInWin(aPLayerInfo);
-						HandleWinnings(aPLayerInfo, aConditions.oddEvenWinMultiplier, bet, totalWinAmount, valueChange);
+						IOHandler::HandleAllInWin(myPLayerInfo);
+						HandleWinnings(myConditions.oddEvenWinMultiplier);
 					}
 					else
 					{
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet, true, winningNumber);
-						DisplayGameBoard(gameBoard, true, winningNumber);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess, true, winningNumber);
+						DisplayGameBoard(true, winningNumber);
 
 						std::cout << "You lost since the ball landed on the number " << winningNumber << " which is a " << (GameUtilities::CheckIfEven(winningNumber) ? "even" : "odd") << " number\n";
-						HandleLoss(aPLayerInfo, bet, valueChange);
+						HandleLoss();
 					}
 
 					system("cls");
@@ -421,16 +405,16 @@ namespace Roulette
 				}
 				case BetType::Column:
 				{
-					bet = GameUtilities::HandleBetting(aPLayerInfo);
+					myBet = GameUtilities::HandleBetting(myPLayerInfo);
 					system("cls");
 
 					int columns{ 3 };
-					int playerGuess{0};
+					int playerGuess{ 0 };
 					bool guessing{ true };
 					while (guessing)
 					{
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet);
-						DisplayGameBoard(gameBoard);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess);
+						DisplayGameBoard();
 						std::cout << "\nWhich column do you think the ball will land on?\nInput: ";
 						std::cin >> playerGuess;
 						if (IOHandler::ValidateInput() && playerGuess > 0 && playerGuess <= columns)
@@ -445,27 +429,27 @@ namespace Roulette
 					}
 					system("cls");
 
-					DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet);
-					DisplayGameBoard(gameBoard);
+					DisplayPlayerBets(playerChoosenBetType, playerGuess);
+					DisplayGameBoard();
 
 					std::cout << "\nThe ball is now being rolled...\n";
 					IOHandler::PauseThenClearScreen();
 
 					if (winningNumber > 0 && playerGuess == CalculateColumn(winningNumber))
 					{
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet, true, winningNumber);
-						DisplayGameBoard(gameBoard, true, winningNumber);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess, true, winningNumber);
+						DisplayGameBoard(true, winningNumber);
 
 						std::cout << "You guessed right with column " << playerGuess << "\n";
-						IOHandler::HandleAllInWin(aPLayerInfo);
-						HandleWinnings(aPLayerInfo, aConditions.columnwinMultiplier, bet, totalWinAmount, valueChange);
+						IOHandler::HandleAllInWin(myPLayerInfo);
+						HandleWinnings(myConditions.columnwinMultiplier);
 					}
 					else
 					{
-						DisplayPlayerBets(aPLayerInfo, playerChoosenBetType, playerGuess, bet, true, winningNumber);
-						DisplayGameBoard(gameBoard, true, winningNumber);
+						DisplayPlayerBets(playerChoosenBetType, playerGuess, true, winningNumber);
+						DisplayGameBoard(true, winningNumber);
 						std::cout << "You were wrong with column " << playerGuess << " the ball landed on column " << CalculateColumn(winningNumber) << "\n";
-						HandleLoss(aPLayerInfo, bet, valueChange);
+						HandleLoss();
 					}
 
 					break;
@@ -477,17 +461,17 @@ namespace Roulette
 					break;
 				}
 			}
-			if(!aPLayerInfo.HasMoney())
+			if (!myPLayerInfo.HasMoney())
 			{
 				return;
 			}
-			if(totalWinAmount > aGeneralRules.maxWinAmountPerTable)
+			if (myTotalWinAmount > myGeneralRules.maxWinAmountPerTable)
 			{
 				std::cout << "\nYou've won too much, you can't play at this table anymore!!!\n";
 				IOHandler::PauseThenClearScreen();
 				return;
 			}
-			aPLayerInfo.DisplayLastFiveGameStatistics();
+			myPLayerInfo.DisplayLastFiveGameStatistics();
 			IOHandler::PauseThenClearScreen();
 		}
 	}

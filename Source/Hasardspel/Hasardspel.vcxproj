@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CasinoHandler.cpp" />
     <ClCompile Include="GuessTheNumberGame.cpp" />
     <ClCompile Include="GuessTheSquareGame.cpp" />
     <ClCompile Include="OddEvenGame.cpp" />
@@ -136,11 +137,12 @@
     <ClCompile Include="Hasardspel.cpp" />
     <ClCompile Include="IOHandler.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="RanomHandler.cpp" />
+    <ClCompile Include="RandomHandler.cpp" />
     <ClCompile Include="RockPaperScissorsGame.cpp" />
     <ClCompile Include="RouletteGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CasinoHandler.h" />
     <ClInclude Include="GameUtilities.h" />
     <ClInclude Include="GuessTheNumberGame.h" />
     <ClInclude Include="GuessTheSquareGame.h" />

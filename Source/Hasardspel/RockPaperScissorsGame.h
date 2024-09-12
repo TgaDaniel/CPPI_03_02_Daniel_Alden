@@ -5,13 +5,32 @@
 
 namespace RockPaperScissors
 {
+	enum class SelectHand
+	{
+		Rock = 1,
+		Paper,
+		Scissors
+	};
+
 	class RockPaperScissorsTable
 	{
 	public:
-		void Play(const GameUtilities::GameConditions aConditions, const GameUtilities::GeneralCasinoRules aGeneralRules, Player::PlayerInformation& aPlayerInformation);
+		RockPaperScissorsTable(GameUtilities::GameConditions aConditions, Player::PlayerInformation aPlayerInfo, GameUtilities::GeneralCasinoRules aRules);
+
+		void Play();
 
 	private:
+		static int myTotalWinAmount;
+		static int myTotalValueChange;
 
+		int myBet;
+		SelectHand myPlayerHand;
+
+		const GameUtilities::GameConditions& myConditions;
+		Player::PlayerInformation& myPLayerInfo;
+		const GameUtilities::GeneralCasinoRules myGeneralRules;
+
+		void DisplayRockPaperScissorsGameStatBoard(bool aHiddenOpponent = false);
 	};
 
 }
