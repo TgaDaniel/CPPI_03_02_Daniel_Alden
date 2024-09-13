@@ -2,26 +2,27 @@
 
 #include "GameUtilities.h"
 #include "Player.h"
+#include "RandomHandler.h"
 
 namespace GuessTheNumber {
 
 	class GuessTheNumberTable
 	{
 	public:
-		GuessTheNumberTable(GameUtilities::GameConditions& aConditions, Player::PlayerInformation& aPlayerInformation, GameUtilities::GeneralCasinoRules aRules);
+		GuessTheNumberTable(int aWinMultiplier, Player::PlayerInformation& aPlayerInformation, GameUtilities::GeneralCasinoRules aRules);
 
-		void Play();
+		void Play(RandomHandler& aRandomHandler);
 
 	private:
-		static int myTotalWinAmountGuessingGame;
-		static int myTotalValueChangeGuessingGame;
+		 int myTotalWinAmount;
+		 int myTotalValueChange;
 
 		int myBet;
 		int myFirstDie;
 		int mySecondDie;
 		int myGuess;
 
-		const GameUtilities::GameConditions& myConditions;
+		const GameUtilities::GameConditions myConditions;
 		Player::PlayerInformation& myPlayerInfo;
 		const GameUtilities::GeneralCasinoRules myGeneralRules;
 

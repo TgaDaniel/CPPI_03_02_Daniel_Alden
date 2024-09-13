@@ -4,6 +4,7 @@
 #include "GuessTheSquareGame.h"
 #include "OddEvenGame.h"
 #include "Player.h"
+#include "RandomHandler.h"
 #include "RockPaperScissorsGame.h"
 #include "RouletteGame.h"
 
@@ -23,12 +24,14 @@ namespace Casino
 	class CasinoHandler
 	{
 	public:
-		CasinoHandler(Player::PlayerInformation& aPlayer, const GameUtilities::GeneralCasinoRules aRules);
+		CasinoHandler() = delete;
+		CasinoHandler(Player::PlayerInformation& aPlayer, const GameUtilities::GeneralCasinoRules aRules, RandomHandler& aRandomHandler);
 		void Start();
 
 	private:
 		Player::PlayerInformation& myPLayer;
 		const GameUtilities::GeneralCasinoRules myRules;
+		RandomHandler& myRandomHandler;
 
 		GuessTheNumber::GuessTheNumberTable myGuessTheNumber;
 		OddEvenGame::OddEvenTable myOddEven;

@@ -32,9 +32,9 @@ namespace RockPaperScissors
 			<< "\n	-----------------------\n";
 	}
 
-	RockPaperScissorsTable::RockPaperScissorsTable(GameUtilities::GameConditions aConditions,
+	RockPaperScissorsTable::RockPaperScissorsTable(int aWinMultiplier,
 		Player::PlayerInformation aPlayerInfo, GameUtilities::GeneralCasinoRules aRules)
-		: myConditions(aConditions), myPLayerInfo(aPlayerInfo), myGeneralRules(aRules)
+		: myConditions({1,3,aWinMultiplier}), myPLayerInfo(aPlayerInfo), myGeneralRules(aRules)
 	{
 		myBet = 0;
 		myPlayerHand = SelectHand::Rock;
@@ -43,7 +43,7 @@ namespace RockPaperScissors
 
 	}
 
-	void RockPaperScissorsTable::Play()
+	void RockPaperScissorsTable::Play(RandomHandler& aRandomHandler)
 	{
 		
 
@@ -83,7 +83,7 @@ namespace RockPaperScissors
 
 				system("cls");
 
-				SelectHand opponentHand = static_cast<SelectHand>(RandomHandler::RandomNumberInRange(1, 3));
+				SelectHand opponentHand = static_cast<SelectHand>(aRandomHandler.RandomNumberInRange(1, 3));
 				bool playerHasWinningHand{ false };
 
 

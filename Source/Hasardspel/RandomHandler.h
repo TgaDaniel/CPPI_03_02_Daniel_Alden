@@ -1,9 +1,13 @@
 #pragma once
 #include <random>
-namespace RandomHandler
-{
-	static std::random_device locRandomDevice;
-	static std::mt19937 locRandomNrGeneratorAlgorithm(locRandomDevice());
 
+class RandomHandler
+{
+public:
+	RandomHandler();
 	int RandomNumberInRange(int aMinValue, int aMaxValue);
-}
+
+private:
+	std::random_device myRandomDevice;
+	std::mt19937 myRandomNrGeneratorAlgorithm;
+};

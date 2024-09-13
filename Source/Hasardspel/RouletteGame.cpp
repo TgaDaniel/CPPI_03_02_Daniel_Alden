@@ -44,12 +44,12 @@ namespace Roulette
 
 		int cellNumber{ 0 };
 
-		for (int columnIndex = 0; columnIndex < BOARD_COLUMN_SIZE; ++columnIndex)
+		for (int columnIndex = 0; columnIndex < myBoardColumnSize; ++columnIndex)
 		{
 
 			cellNumber = step - columnIndex; //calculates the first value in the row
 
-			for (int rowIndex = 0; rowIndex < BOARD_ROW_SIZE; ++rowIndex)
+			for (int rowIndex = 0; rowIndex < myBoardRowSize; ++rowIndex)
 			{
 				bool isRed{ CalculateIfNumberIsRed(cellNumber) };
 				myGameBoard[columnIndex][rowIndex] = { cellNumber, isRed };
@@ -64,7 +64,7 @@ namespace Roulette
 
 		std::cout << "\n--------------------------------------------------------------------------------------\n";
 
-		for (int columnIndex = 0; columnIndex < BOARD_COLUMN_SIZE; columnIndex++)
+		for (int columnIndex = 0; columnIndex < myBoardColumnSize; columnIndex++)
 		{
 			if (aShowBallPosition && aWinningNr == 0)
 			{
@@ -75,7 +75,7 @@ namespace Roulette
 				std::cout << "\33[42m| 0 |\33[0m ";
 			}
 
-			for (int rowIndex = 0; rowIndex < BOARD_ROW_SIZE; rowIndex++)
+			for (int rowIndex = 0; rowIndex < myBoardRowSize; rowIndex++)
 			{
 				if (aWinningNr == myGameBoard[columnIndex][rowIndex].cellNumber && aShowBallPosition)
 				{
@@ -217,15 +217,16 @@ namespace Roulette
 
 	}
 
-	RouletteTable::RouletteTable(const RouletteConditions& aConditions, Player::PlayerInformation& aPLayerInfo,
+	RouletteTable::RouletteTable(const RouletteConditions aConditions, Player::PlayerInformation& aPLayerInfo,
 		const GameUtilities::GeneralCasinoRules aGeneralRules)
-		: myConditions(aConditions), myPLayerInfo(aPLayerInfo), myGeneralRules(aGeneralRules)
+		: myBoardColumnSize(3), myBoardRowSize(12), myConditions(aConditions), myGeneralRules(aGeneralRules),
+		  myPLayerInfo(aPLayerInfo)
 	{
 		InitializeRouletteBoard();
 		myBet = 0;
 	}
 
-	void RouletteTable::Play()
+	void RouletteTable::Play(RandomHandler& aRandomHandler)
 	{
 		if (myTotalWinAmount > myGeneralRules.maxWinAmountPerTable)
 		{
@@ -256,7 +257,7 @@ namespace Roulette
 		while (playing)
 		{
 
-			int winningNumber = RandomHandler::RandomNumberInRange(0, (BOARD_COLUMN_SIZE * BOARD_ROW_SIZE));
+			int winningNumber = aRandomHandler.RandomNumberInRange(0, (myBoardColumnSize * myBoardRowSize));
 
 			system("cls");
 
@@ -282,13 +283,13 @@ namespace Roulette
 
 						std::cout << "\nWhich number do you think the ball will land on?: ";
 						std::cin >> playerGuess;
-						if (IOHandler::ValidateInput() && playerGuess >= 0 && playerGuess <= BOARD_ROW_SIZE * BOARD_COLUMN_SIZE)
+						if (IOHandler::ValidateInput() && playerGuess >= 0 && playerGuess <= myBoardRowSize * myBoardColumnSize)
 						{
 							guessing = false;
 						}
 						else
 						{
-							std::cout << "\nInvalid input, remember that the number you can guess range from 1 to " << (BOARD_COLUMN_SIZE * BOARD_ROW_SIZE) << "\n";
+							std::cout << "\nInvalid input, remember that the number you can guess range from 1 to " << (myBoardColumnSize * myBoardRowSize) << "\n";
 							IOHandler::PauseThenClearScreen();
 						}
 					}
@@ -342,7 +343,7 @@ namespace Roulette
 
 					IOHandler::PauseThenClearScreen();
 
-					if (winningNumber > 0, playerGuess == CalculateIfNumberIsRed(winningNumber))
+					if (winningNumber > 0 && playerGuess == CalculateIfNumberIsRed(winningNumber))
 					{
 
 						std::cout << "You won with your guess on " << (playerGuess ? "red" : "black") << "!!!\n";

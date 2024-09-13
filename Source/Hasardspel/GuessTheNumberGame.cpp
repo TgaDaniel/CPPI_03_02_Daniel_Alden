@@ -24,20 +24,20 @@ namespace GuessTheNumber
 			<< "\n	-----------------------\n\n";
 	}
 
-	GuessTheNumberTable::GuessTheNumberTable(GameUtilities::GameConditions& aConditions, Player::PlayerInformation& aPlayerInformation, GameUtilities::GeneralCasinoRules aRules)
-	: myConditions(aConditions), myPlayerInfo(aPlayerInformation),myGeneralRules(aRules)
+	GuessTheNumberTable::GuessTheNumberTable( int aWinMultiplier, Player::PlayerInformation& aPlayerInformation, GameUtilities::GeneralCasinoRules aRules)
+	: myConditions({1,6,aWinMultiplier}), myPlayerInfo(aPlayerInformation),myGeneralRules(aRules)
 	{
 		myBet = 0;
 		myFirstDie = 0;
 		mySecondDie = 0;
 		myGuess = 0;
-		myTotalValueChangeGuessingGame = 0;
-		myTotalWinAmountGuessingGame = 0;
+		myTotalValueChange = 0;
+		myTotalWinAmount = 0;
 	}
 
-	void GuessTheNumberTable::Play()
+	void GuessTheNumberTable::Play(RandomHandler& aRandomHandler)
 	{
-		if (myTotalWinAmountGuessingGame >= myGeneralRules.maxWinAmountPerTable)
+		if (myTotalWinAmount >= myGeneralRules.maxWinAmountPerTable)
 		{
 			std::cout << "\nYou are not allowed at this table anymore after winning so much. Leave!\n";
 			IOHandler::PauseThenClearScreen();
@@ -48,18 +48,8 @@ namespace GuessTheNumber
 
 		std::cout << "\nWelcome to the number guessing game!!! \n";
 
-		if (myTotalValueChangeGuessingGame <= -myGeneralRules.reactionAmount)
-		{
-			std::cout << "\nBetter luck this time, i'm sure you'll win.\n";
-		}
-		else if (myTotalValueChangeGuessingGame >= myGeneralRules.reactionAmount)
-		{
-			std::cout << "\nThe big winner is back huh? Share some of that luck will ya?\n";
-		}
-		else
-		{
-			std::cout << "\nThis will be fun!\n";
-		}
+		IOHandler::ReactionText(myGeneralRules, myTotalValueChange);
+
 		std::cout << "\nWant the game explained to you? (y/n): ";
 
 		if (IOHandler::TwoCharacterOptionInput('y', 'n'))
@@ -107,13 +97,13 @@ namespace GuessTheNumber
 
 					IOHandler::PauseThenClearScreen();
 
-					myFirstDie = RandomHandler::RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue);
+					myFirstDie = aRandomHandler.RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue);
 
 					DisplayGuessNumberGameStatBoard();
 					std::cout << "\nFirst die: " << myFirstDie << "\n\nWhen you are ready throw the second die \n\n";
 					IOHandler::PauseThenClearScreen();
 
-					mySecondDie = RandomHandler::RandomNumberInRange(myConditions.minRandomValue, myConditions.minRandomValue);
+					mySecondDie = aRandomHandler.RandomNumberInRange(myConditions.minRandomValue, myConditions.minRandomValue);
 
 					DisplayGuessNumberGameStatBoard();
 					std::cout << "\nSecond die: " << mySecondDie << "!\n";
@@ -126,10 +116,10 @@ namespace GuessTheNumber
 						myPlayerInfo.IncrementallyChangeMoney(myBet * myConditions.winMultiplier);
 						myPlayerInfo.AddStatisticsToLastFiveGames(  (myBet * myConditions.winMultiplier));
 
-						myTotalValueChangeGuessingGame += (myBet * myConditions.winMultiplier) - myBet;
+						myTotalValueChange += (myBet * myConditions.winMultiplier) - myBet;
 
-						myTotalWinAmountGuessingGame += (myBet * myConditions.winMultiplier) - myBet;
-						if (myTotalWinAmountGuessingGame >= myGeneralRules.maxWinAmountPerTable)
+						myTotalWinAmount += (myBet * myConditions.winMultiplier) - myBet;
+						if (myTotalWinAmount >= myGeneralRules.maxWinAmountPerTable)
 						{
 							std::cout << "\nYou've won to much at this table and a guard escorts you from it\n";
 							IOHandler::PauseThenClearScreen();
@@ -140,7 +130,7 @@ namespace GuessTheNumber
 					{
 						std::cout << "\nWhich mean you lost with a number " << (myGuess < winningNr ? "too low..." : "too high...") << " since the added value of both die is: "
 							<< winningNr << "\nBetter luck next time!\n";
-						myTotalValueChangeGuessingGame -= (myBet * myConditions.winMultiplier) - myBet;
+						myTotalValueChange -= (myBet * myConditions.winMultiplier) - myBet;
 						myPlayerInfo.AddStatisticsToLastFiveGames( -myBet);
 					}
 				}

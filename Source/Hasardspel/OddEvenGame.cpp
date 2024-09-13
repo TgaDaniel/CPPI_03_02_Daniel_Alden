@@ -30,15 +30,16 @@ namespace OddEvenGame
 			<< "\n	-----------------------\n\n";
 	}
 
-	OddEvenTable::OddEvenTable(const GameUtilities::GameConditions& aConditions,
+	OddEvenTable::OddEvenTable(int aWinMultiplier,
 		Player::PlayerInformation& aPLayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules)
-	:myConditions(aConditions), myPLayerInfo(aPLayerInfo), myGeneralRules(aGeneralRules)
+	:myConditions({1,6, aWinMultiplier}), myPLayerInfo(aPLayerInfo), myGeneralRules(aGeneralRules)
 	{
 		myTotalValueChangeOddOrEven = 0;
 		myTotalWinAmountOddOrEven = 0;
+		myBet = 0;
 	}
 
-	void OddEvenTable::Play()
+	void OddEvenTable::Play(RandomHandler& aRandomHandler)
 	{
 
 		if (myTotalWinAmountOddOrEven >= myGeneralRules.maxWinAmountPerTable)
@@ -94,7 +95,7 @@ namespace OddEvenGame
 			std::cout << "\nWhen you are ready to throw the first die\n";
 			IOHandler::PauseThenClearScreen();
 
-			firstDie = RandomHandler::RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue);
+			firstDie = aRandomHandler.RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue);
 
 			DisplayOddOrEvenGameStatBoard(guess, firstDie, secondDie);
 			std::cout << "\nThe fist die landed on " << firstDie;
@@ -103,7 +104,7 @@ namespace OddEvenGame
 
 			IOHandler::PauseThenClearScreen();
 
-			secondDie = RandomHandler::RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue);
+			secondDie = aRandomHandler.RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue);
 
 			DisplayOddOrEvenGameStatBoard(guess, firstDie, secondDie);
 			std::cout << "\nThe second die landed on " << secondDie << "\n";

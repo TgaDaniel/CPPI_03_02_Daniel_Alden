@@ -1,22 +1,16 @@
-#include <iostream>
-#include <random>
-
+#include "CasinoHandler.h"
 #include "GameUtilities.h"
-#include "IOHandler.h"
-
-#include "GuessTheNumberGame.h"
-#include "OddEvenGame.h"
-#include "RockPaperScissorsGame.h"
-#include "GuessTheSquareGame.h"
-#include "RouletteGame.h"
+#include "RandomHandler.h"
 
 int main()
 {
-
-	GameUtilities::PlayerInformation player = { 500,{0},false };
+	RandomHandler randomHandler{};
+	Player::PlayerInformation player{ 500 };
 	GameUtilities::GeneralCasinoRules rules = { 500,100 };
 
-	
+	Casino::CasinoHandler casino{player,rules,randomHandler};
+
+	casino.Start();
 
 	return 0;
 }

@@ -2,6 +2,7 @@
 
 #include "GameUtilities.h"
 #include "Player.h"
+#include "RandomHandler.h"
 
 namespace RockPaperScissors
 {
@@ -15,18 +16,18 @@ namespace RockPaperScissors
 	class RockPaperScissorsTable
 	{
 	public:
-		RockPaperScissorsTable(GameUtilities::GameConditions aConditions, Player::PlayerInformation aPlayerInfo, GameUtilities::GeneralCasinoRules aRules);
+		RockPaperScissorsTable(int aWinMultiplier, Player::PlayerInformation aPlayerInfo, GameUtilities::GeneralCasinoRules aRules);
 
-		void Play();
+		void Play(RandomHandler& aRandomHandler);
 
 	private:
-		static int myTotalWinAmount;
-		static int myTotalValueChange;
+		  int myTotalWinAmount;
+		  int myTotalValueChange;
 
 		int myBet;
 		SelectHand myPlayerHand;
 
-		const GameUtilities::GameConditions& myConditions;
+		const GameUtilities::GameConditions myConditions;
 		Player::PlayerInformation& myPLayerInfo;
 		const GameUtilities::GeneralCasinoRules myGeneralRules;
 

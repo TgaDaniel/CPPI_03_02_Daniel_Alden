@@ -13,9 +13,9 @@ namespace GameUtilities
 
 	struct GameConditions
 	{
-		int minRandomValue;
-		int maxRandomValue;
-		int winMultiplier;
+		int minRandomValue = 1;
+		int maxRandomValue = 6 ;
+		int winMultiplier = 2;
 	};
 
 	int HandleBetting(Player::PlayerInformation& aPlayerInfo);

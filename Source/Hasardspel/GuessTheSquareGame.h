@@ -3,6 +3,7 @@
 
 #include "GameUtilities.h"
 #include "Player.h"
+#include "RandomHandler.h"
 
 namespace GuessTheSquare
 {
@@ -10,12 +11,15 @@ namespace GuessTheSquare
 	class GuessTheSquareTable
 	{
 	public:
-		GuessTheSquareTable( const GameUtilities::GameConditions& aConditions, Player::PlayerInformation& aPlayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules);
+		GuessTheSquareTable( int aWinMultiplier, Player::PlayerInformation& aPlayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules);
 
-		void Play();
+		void Play(RandomHandler& aRandomHandler);
 
 	private:
-		const GameUtilities::GameConditions& myConditions;
+		 int myTotalWinAmount;
+		 int myTotalValueChange;
+
+		const GameUtilities::GameConditions myConditions;
 		Player::PlayerInformation& myPLayerInfo;
 		const GameUtilities::GeneralCasinoRules myGeneralRules;
 		std::array<bool,5> mySquares;

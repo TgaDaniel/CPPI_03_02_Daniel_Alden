@@ -4,13 +4,21 @@
 
 #include "GuessTheNumberGame.h"
 #include "IOHandler.h"
+#include "RandomHandler.h"
 
 
 namespace Casino
 {
 
-	CasinoHandler::CasinoHandler(Player::PlayerInformation& aPlayer, const GameUtilities::GeneralCasinoRules aRules)
-		: myPLayer(aPlayer), myRules(aRules)
+	CasinoHandler::CasinoHandler(Player::PlayerInformation& aPlayer, const GameUtilities::GeneralCasinoRules aRules, RandomHandler& aRandomHandler)
+		:
+		myPLayer(aPlayer), myRules(aRules),
+	    myRandomHandler(aRandomHandler),
+		myGuessTheNumber(5, aPlayer, aRules),
+		myOddEven(2,aPlayer,aRules),
+		myGuessTheSquare(3, aPlayer, aRules),
+		myRockPaperScissors(2,aPlayer,aRules),
+		myRoulette({},aPlayer,aRules)
 	{
 	}
 
@@ -35,46 +43,45 @@ namespace Casino
 			int userInput;
 			std::cin >> userInput;
 
-
 			if (IOHandler::ValidateInput())
 			{
 
 				switch (static_cast<Tables>(userInput)) {
 					case Tables::NumberGuessingTable:
 					{
+						myGuessTheNumber.Play(myRandomHandler);
 						break;
 					}
 					case Tables::OddOrEvenTable:
 					{
-						OddEvenGame::OddOrEvenGame({ 1,6,2 }, player, rules);
+						myOddEven.Play(myRandomHandler);
 						break;
 					}
 					case Tables::RockPaperScissors:
 					{
-						RockPaperScissors::Play({ 1,3,3 }, rules, player);
+						myRockPaperScissors.Play(myRandomHandler);
 						break;
 					}
 					case Tables::GuessTheSquare:
 					{
-						bool squareArray[5] = { false };
-						GuessTheSquare::Play(squareArray, 5, { 1,5,3 }, player, rules);
+						myGuessTheSquare.Play(myRandomHandler);
 						break;
 					}
 					case Tables::Roulette:
 					{
-						Roulette::Play({ 5,2,2,3 }, rules, player);
+						myRoulette.Play(myRandomHandler);
 						break;
 					}
 					case Tables::ShowGameStats:
 					{
-						GameUtilities::DisplayLastFiveGameStatistics(player);
+						myPLayer.DisplayLastFiveGameStatistics();
 						IOHandler::PauseThenClearScreen();
 						break;
 					}
 					case Tables::LeaveCasino:
 					{
 						playing = false;
-						GameUtilities::DisplayLastFiveGameStatistics(player);
+						myPLayer.DisplayLastFiveGameStatistics();
 						std::cout << "\nCome back soon!\n";
 						system("pause");
 						break;
@@ -92,20 +99,19 @@ namespace Casino
 				std::cout << "\nInvalid input\n";
 				system("pause");
 			}
-			if (!GameUtilities::CheckPlayerHasMoney(player))
+			if (!myPLayer.HasMoney())
 			{
-				if (player.allIn)
+				if (myPLayer.GetAllIn())
 				{
 					std::cout << "\n\nThe casino owner laughs and motions the guards before losing interest in you and continuing to look around the casinos for other people in misfortune";
 					IOHandler::PauseThenClearScreen();
 				}
 				std::cout << "\n\nWith no money left the casino see no more use for you and throw you out forcibly.\n"
 					<< "You came here with hopes and dreams that are all crushed now with no more money in your pockets.\n";
-				GameUtilities::DisplayMoney(player.money);
+				myPLayer.DisplayMoney();
 				playing = false;
 				system("pause");
 			}
 		}
 	}
-
 }

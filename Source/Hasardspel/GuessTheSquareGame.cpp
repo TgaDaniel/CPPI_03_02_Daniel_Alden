@@ -39,16 +39,15 @@ namespace GuessTheSquare
 		std::cout << "\n";
 	}
 
-	GuessTheSquareTable::GuessTheSquareTable(
-		const GameUtilities::GameConditions& aConditions, Player::PlayerInformation& aPlayerInfo,
+	GuessTheSquareTable::GuessTheSquareTable(int aWinMultiplier, Player::PlayerInformation& aPlayerInfo,
 		const GameUtilities::GeneralCasinoRules aGeneralRules)
-		: myConditions(aConditions), myPLayerInfo(aPlayerInfo), myGeneralRules(aGeneralRules)
+		: myConditions({1,6,aWinMultiplier}), myPLayerInfo(aPlayerInfo), myGeneralRules(aGeneralRules)
 	
 	{
 		mySquares = { false };
 	}
 
-	void GuessTheSquareTable::Play()
+	void GuessTheSquareTable::Play(RandomHandler& aRandomHandler)
 	{
 		static int totalWinAmount{ 0 };
 		static int valueChangeAmount{ 0 };
@@ -110,7 +109,7 @@ namespace GuessTheSquare
 			while (choosing)
 			{
 
-				int indexWithStarIn{ RandomHandler::RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue) - 1 };
+				int indexWithStarIn{ aRandomHandler.RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue) - 1 };
 				mySquares[indexWithStarIn] = true;
 				std::cout << "In which box do you think the star will be?\nInput: ";
 

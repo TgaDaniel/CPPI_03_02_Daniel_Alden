@@ -6,17 +6,17 @@ namespace OddEvenGame
 	class OddEvenTable
 	{
 	public:
-		OddEvenTable(const GameUtilities::GameConditions& aConditions, Player::PlayerInformation& aPLayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules);
+		OddEvenTable(int aWinMultiplier, Player::PlayerInformation& aPLayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules);
 
-		void Play();
+		void Play(RandomHandler& aRandomHandler);
 
 	private:
-		static int myTotalWinAmountOddOrEven;
-		static int myTotalValueChangeOddOrEven;
+		  int myTotalWinAmountOddOrEven;
+		  int myTotalValueChangeOddOrEven;
 
 		int myBet;
 
-		const GameUtilities::GameConditions& myConditions;
+		const GameUtilities::GameConditions myConditions;
 		Player::PlayerInformation& myPLayerInfo;
 		const GameUtilities::GeneralCasinoRules myGeneralRules;
 

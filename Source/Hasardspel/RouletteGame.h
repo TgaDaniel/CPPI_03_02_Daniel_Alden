@@ -1,6 +1,7 @@
 #pragma once
 #include "GameUtilities.h"
 #include "Player.h"
+#include "RandomHandler.h"
 
 namespace Roulette
 {
@@ -30,23 +31,23 @@ namespace Roulette
 	class RouletteTable
 	{
 	public:
-		RouletteTable(const RouletteConditions& aConditions, Player::PlayerInformation& aPLayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules);
+		RouletteTable(const RouletteConditions aConditions, Player::PlayerInformation& aPLayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules);
 
-		void Play();
+		void Play(RandomHandler& aRandomHandler);
 
 	private:
 
-		constexpr int BOARD_COLUMN_SIZE{ 3 };
-		constexpr int BOARD_ROW_SIZE{ 12 };
+		 const int myBoardColumnSize;
+		 const int myBoardRowSize;
 
 		CellValues myGameBoard[3][12];
 
-		static int myTotalWinAmount;
-		static int myValueChange;
+		  int myTotalWinAmount;
+		  int myValueChange;
 
 		int myBet;
 
-		const RouletteConditions& myConditions;
+		const RouletteConditions myConditions;
 		const GameUtilities::GeneralCasinoRules myGeneralRules;
 		Player::PlayerInformation& myPLayerInfo;
 
