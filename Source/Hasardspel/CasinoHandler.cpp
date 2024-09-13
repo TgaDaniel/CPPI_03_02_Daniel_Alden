@@ -25,12 +25,16 @@ namespace Casino
 
 	void CasinoHandler::Start()
 	{
+
+		std::cout << "Welcome to the casino " << myPLayer.GetName() << "!!!\n";
+		IOHandler::PauseThenClearScreen();
+
 		bool playing{ true };
 		while (playing)
 		{
 			system("cls");
 			myPLayer.DisplayMoney();
-			std::cout << "Which table do you want to sit at?\n\n"
+			std::cout << "Which table do you want to play at " << myPLayer.GetName() <<"?\n\n"
 				<< "Even or Odd table [" << static_cast<int>(Tables::OddOrEvenTable) << "]\n"
 				<< "High Stake Guess the number table [" << static_cast<int>(Tables::HighStakeNumberGuessing) << "]\n"
 				<< "Low Stake Guess the number table [" << static_cast<int>(Tables::LowStakeNumberGuessing) << "]\n"
@@ -51,12 +55,12 @@ namespace Casino
 				switch (static_cast<Tables>(userInput)) {
 					case Tables::HighStakeNumberGuessing:
 					{
-						myGuessTheNumberLowStake.Play(myRandomHandler);
+						myGuessTheNumberHighStake.Play(myRandomHandler);
 						break;
 					}
 					case Tables::LowStakeNumberGuessing:
 					{
-						myGuessTheNumberHighStake.Play(myRandomHandler);
+						myGuessTheNumberLowStake.Play(myRandomHandler);
 						break;
 					}
 					case Tables::OddOrEvenTable:

@@ -42,10 +42,13 @@ namespace GuessTheSquare
 
 	GuessTheSquareTable::GuessTheSquareTable(int aWinMultiplier, Player::PlayerInformation& aPlayerInfo,
 		const GameUtilities::GeneralCasinoRules aGeneralRules)
-		: myConditions({ 1,6,aWinMultiplier }), myPLayerInfo(aPlayerInfo), myGeneralRules(aGeneralRules)
+		: myConditions({ 1, 6, aWinMultiplier }), myPLayerInfo(aPlayerInfo),
+		myGeneralRules(aGeneralRules)
 
 	{
 		mySquares = { false };
+		myTotalWinAmount = 0;
+		myTotalValueChange = 0;
 	}
 
 	void GuessTheSquareTable::Play(RandomHandler& aRandomHandler)
@@ -65,7 +68,7 @@ namespace GuessTheSquare
 
 		std::cout << "\nWelcome to Guess the square table!\n";
 
-		IOHandler::ReactionText(myGeneralRules, valueChangeAmount); 
+		IOHandler::ReactionText(myGeneralRules, valueChangeAmount, myPLayerInfo);
 
 		std::cout << "\nWant the game explained?(y/n):";
 

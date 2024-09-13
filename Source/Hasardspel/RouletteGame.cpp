@@ -237,9 +237,9 @@ namespace Roulette
 
 		system("cls");
 
-		std::cout << "\nWelcome to the Roulette table!\n";
+		std::cout << "\nWelcome to the Roulette table " << myPLayerInfo.GetName() << "!\n";
 
-		IOHandler::ReactionText(myGeneralRules, myValueChange);
+		IOHandler::ReactionText(myGeneralRules, myValueChange, myPLayerInfo);
 
 		std::cout << "Want to hear the rules?(y/n):";
 

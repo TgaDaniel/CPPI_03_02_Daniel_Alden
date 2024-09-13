@@ -27,7 +27,7 @@ namespace GameUtilities
 					aPlayerInfo.SetAllIn(true);
 					system("cls");
 					std::cout << "\n\n*The casino quiets down and everyone looks at you. You feel the tension and weight of this decision*\n*Whatever the outcome, this decision will be life changing, either for good or bad*\n"
-						<< "\n\n!!!You have just gone all in!!!\n\n";
+						<< "\n\n" << aPlayerInfo.GetName() << " have just gone all in!!!\n\n";
 					IOHandler::PauseThenClearScreen();
 					std::cout << "\n\nThe owner of the casino looks down on you from on top of his comically villainous throne and a large evil grin spread along his face\n'The house always wins' He thinks\n";
 					IOHandler::PauseThenClearScreen();

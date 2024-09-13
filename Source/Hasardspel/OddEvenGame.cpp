@@ -16,7 +16,7 @@ namespace OddEvenGame
 
 		std::cout << "\n\n	Die Game Stats--------\n"
 			<< "	-----------------------\n"
-			<< "	Player guess: " << (aGuess ? "Even" : "Odd")
+			<< "	" << myPLayerInfo.GetName() << " guess: " << (aGuess ? "Even" : "Odd")
 			<< "\n	-----------------------\n"
 			<< "	Money: " << myPLayerInfo.GetMoney() << "$"
 			<< "\n	-----------------------\n"
@@ -52,7 +52,7 @@ namespace OddEvenGame
 		system("cls");
 		std::cout << "Welcome to the Even or Odd guessing game!!!\n";
 
-		IOHandler::ReactionText(myGeneralRules, myTotalValueChange);
+		IOHandler::ReactionText(myGeneralRules, myTotalValueChange, myPLayerInfo);
 
 		std::cout << "Want the game explained to you?(y/n):";
 

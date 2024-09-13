@@ -2,19 +2,21 @@
 
 #include "Player.h"
 
+#include "IOHandler.h"
+
 namespace Player
 {
 
 	PlayerInformation::PlayerInformation(int aMoney)
 		: myMoney(aMoney)
 	{
+		SetPlayerName();
 	}
 
 
 	/// <summary>
 	/// Handles adding of money statistics to the <c>lastFiveGamesStatistics array</c> in the <c>PlayerInformation struct</c>. Where 0 equals no play
 	/// </summary>
-	/// <param name="aPlayerInfo">Information about the player passed in with the <c>PlayerInformation</c> struct as a reference </param>
 	/// <param name="aMoney">The amount of money won or lost. If lost enter negative amount instead of positive</param>
 	void PlayerInformation::AddStatisticsToLastFiveGames(const int aMoney)
 	{
@@ -64,7 +66,7 @@ namespace Player
 			return;
 		}
 
-		std::cout << "\n\nGeneral Game statistics----"
+		std::cout << "\n\n" <<  myName << "'s Game statistics----"
 			<< "\n--------------------------\n";
 
 		for (int i = 4; i >= 0; i--)
@@ -119,10 +121,69 @@ namespace Player
 		return myAllIn;
 	}
 
+	const char* PlayerInformation::GetName() const
+	{
+		return myName;
+	}
+
+	/// <summary>
+	/// Validates no numbers are in <c>myName</c>
+	/// </summary>
+	/// <returns><c>True</c> if there are no numbers and <c>False</c> if there is </returns>
+	bool PlayerInformation::ValidateNoNumbersInName(char aStringArray[], int aArraySize)
+	{
+		constexpr int numbersInBaseTen{ 10 };
+
+		constexpr char firstValueInBaseTen = '0';
+
+		for (int arrayIndex = 0; arrayIndex < aArraySize; arrayIndex++)
+		{
+			for (int adder = 0; adder <= numbersInBaseTen; adder++)
+			{
+				if (aStringArray[arrayIndex] == (firstValueInBaseTen + adder)) return false;
+			}
+		}
+		return true;
+	}
+
+	void PlayerInformation::SetPlayerName()
+	{
+		constexpr int nameArraySize{ 17 };
+		constexpr int validationSize{ 18 };
+
+		while (true)
+		{
+			char validationArray[validationSize];
+
+			std::cout << "\nEnter a name between 2 and 16 characters long, with no numeric characters in it\n"
+				"Input: ";
+
+
+			std::cin.get(validationArray, validationSize);
+
+			if (ValidateNoNumbersInName(validationArray, nameArraySize))
+			{
+				for (int i = 0; i < nameArraySize; i++)
+				{
+					myName[i] = validationArray[i];
+					if (validationArray[i] == '\0' && i > 1)
+					{
+						return;
+					};
+				}
+			}
+
+			system("cls");
+			std::cout << "\nInvalid input...\n";
+			IOHandler::PauseThenClearScreen();
+			IOHandler::FlushCinBuffer();
+		}
+	}
+
 	void PlayerInformation::DisplayMoney() const
 	{
 		std::cout << "\n-------------------------\n"
-			<< "Money: " << myMoney << "$"
+			<< myName << " Money: " << myMoney << "$"
 			<< "\n-------------------------\n\n";
 	}
 

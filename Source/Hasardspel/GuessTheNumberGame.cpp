@@ -10,7 +10,7 @@ namespace GuessTheNumber
 	{
 		std::cout << "\n\n	Die Game Stats--------\n"
 			<< "	-----------------------\n"
-			<< "	Player guess: " << myGuess
+			<< "	" << myPlayerInfo.GetName() << " guess: " << myGuess
 			<< "\n	-----------------------\n"
 			<< "	Money: " << myPlayerInfo.GetMoney() << "$"
 			<< "\n	-----------------------\n"
@@ -63,10 +63,10 @@ namespace GuessTheNumber
 
 		system("cls");
 
-		std::cout << "\nWelcome to the number guessing game!!!\n"
-			   "Bets start start at " << myTableBetParameters.minBet << " and goes up to " << myTableBetParameters.maxBet;
+		std::cout << "\nWelcome to the number guessing game!!!\n\n"
+			   "Bets start start at " << myTableBetParameters.minBet << " and goes up to " << myTableBetParameters.maxBet << "\n";
 
-		IOHandler::ReactionText(myGeneralRules, myTotalValueChange);
+		IOHandler::ReactionText(myGeneralRules, myTotalValueChange, myPlayerInfo);
 
 		std::cout << "\nWant the game explained to you? (y/n): ";
 
@@ -117,7 +117,7 @@ namespace GuessTheNumber
 					myFirstDie = aRandomHandler.RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue);
 
 					DisplayGuessNumberGameStatBoard();
-					std::cout << "\nFirst die: " << myFirstDie << "\n\nWhen you are ready throw the second die \n\n";
+					std::cout << "\nFirst die: " << myFirstDie << "\n\nWhen you are ready throw the second die\n\n";
 					IOHandler::PauseThenClearScreen();
 
 					mySecondDie = aRandomHandler.RandomNumberInRange(myConditions.minRandomValue, myConditions.minRandomValue);

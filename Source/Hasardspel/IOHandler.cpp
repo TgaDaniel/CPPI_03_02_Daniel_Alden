@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "IOHandler.h"
 #include "GameUtilities.h"
 
 namespace IOHandler
@@ -34,7 +35,8 @@ namespace IOHandler
 	{
 		if (aPlayer.GetAllIn())
 		{
-			std::cout << "\n\nThe casino owner scoffs and look away.\nPeople applaud while you are being paid out\n";
+			std::cout << "\n\nThe casino owner scoffs and look away.\nPeople applaud while you are being paid out and you can hear people whisper your name in admiration\n"
+			<< aPlayer.GetName() << " they whisper\n";
 			aPlayer.SetAllIn(false);
 		}
 	}
@@ -76,19 +78,19 @@ namespace IOHandler
 				<< "(" << aTrueChar << "/" << aFalseChar << "): ";
 		}
 	}
-	void ReactionText(const GameUtilities::GeneralCasinoRules& aGeneralRules, int aTableValueChange)
+	void ReactionText(const GameUtilities::GeneralCasinoRules& aGeneralRules, int aTableValueChange, const Player::PlayerInformation& aPlayer)
 	{
 		if (aTableValueChange <= -aGeneralRules.reactionAmount)
 		{
-			std::cout << "\nBetter luck this time, i'm sure you'll win.\n";
+			std::cout << "\n\nBetter luck this time " << aPlayer.GetName() << ", i'm sure you'll win.\n\n";
 		}
 		else if (aTableValueChange >= aGeneralRules.reactionAmount)
 		{
-			std::cout << "\nThe big winner is back huh? Share some of that luck will ya?\n";
+			std::cout << "\n\nThe big winner " << aPlayer.GetName() << " is back huh? Share some of that luck will ya?\n\n";
 		}
 		else
 		{
-			std::cout << "\nThis will be fun!\n";
+			std::cout << "\n\nThis will be fun " << aPlayer.GetName() <<"!\n\n";
 		}
 	}
 }

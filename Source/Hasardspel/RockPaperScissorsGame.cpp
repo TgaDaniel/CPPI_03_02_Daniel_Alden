@@ -12,7 +12,7 @@ namespace RockPaperScissors
 	{
 		std::cout
 			<< "	-----------------------\n"
-			<< "	Player hand: " << (myPlayerHand == SelectHand::Rock
+			<< "	" << myPLayerInfo.GetName() << " hand: " << (myPlayerHand == SelectHand::Rock
 				? "ROCK"
 				: (myPlayerHand == SelectHand::Paper
 					? "PAPER"
@@ -45,8 +45,6 @@ namespace RockPaperScissors
 
 	void RockPaperScissorsTable::Play(RandomHandler& aRandomHandler)
 	{
-
-
 		if (myTotalWinAmount >= myGeneralRules.maxWinAmountPerTable)
 		{
 			std::cout << "\nYou can't play at this table anymore punk!\n";
@@ -58,7 +56,7 @@ namespace RockPaperScissors
 
 		std::cout << "\nWelcome to the Rock Paper Scissors table!\n";
 
-		IOHandler::ReactionText(myGeneralRules, myTotalValueChange);
+		IOHandler::ReactionText(myGeneralRules, myTotalValueChange, myPLayerInfo);
 
 		std::cout << "\nWant to hear the rules?(y/n): ";
 

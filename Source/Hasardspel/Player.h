@@ -16,11 +16,16 @@ namespace Player
 
 		void SetAllIn(bool aIsAllIn);
 		bool GetAllIn() const;
+		const char* GetName() const;
+		bool ValidateNoNumbersInName(char aStringArray[], int aArraySize);
 
 	private:
-		int myMoney = 500;
+		int myMoney;
 		int myLastFiveGamesStatistics[5] = { 0 };
 		bool myAllIn = false;
+		char myName[17];
+
+		void SetPlayerName();
 	};
 
 }
