@@ -10,6 +10,11 @@ namespace GameUtilities
 		int reactionAmount = 100;
 	};
 
+	struct TableBetParameters
+	{
+		int minBet{10};
+		int maxBet{100};
+	};
 
 	struct GameConditions
 	{
@@ -18,7 +23,7 @@ namespace GameUtilities
 		int winMultiplier = 2;
 	};
 
-	int HandleBetting(Player::PlayerInformation& aPlayerInfo);
+	int HandleBetting(Player::PlayerInformation& aPlayerInfo, bool aUseBetParams = false, TableBetParameters aBetParams = {1,100});
 
 	bool CheckIfEven(int aValue);
 

@@ -13,12 +13,13 @@ namespace Casino
 	CasinoHandler::CasinoHandler(Player::PlayerInformation& aPlayer, const GameUtilities::GeneralCasinoRules aRules, RandomHandler& aRandomHandler)
 		:
 		myPLayer(aPlayer), myRules(aRules),
-	    myRandomHandler(aRandomHandler),
-		myGuessTheNumber(5, aPlayer, aRules),
-		myOddEven(2,aPlayer,aRules),
+		myRandomHandler(aRandomHandler),
+		myGuessTheNumberLowStake(3, aPlayer, aRules, { 10,100 }),
+		myGuessTheNumberHighStake(5, aPlayer, aRules, { 100,500 }),
+		myOddEven(2, aPlayer, aRules),
 		myGuessTheSquare(3, aPlayer, aRules),
-		myRockPaperScissors(2,aPlayer,aRules),
-		myRoulette({},aPlayer,aRules)
+		myRockPaperScissors(2, aPlayer, aRules),
+		myRoulette({}, aPlayer, aRules)
 	{
 	}
 
@@ -31,7 +32,8 @@ namespace Casino
 			myPLayer.DisplayMoney();
 			std::cout << "Which table do you want to sit at?\n\n"
 				<< "Even or Odd table [" << static_cast<int>(Tables::OddOrEvenTable) << "]\n"
-				<< "Guess the number table [" << static_cast<int>(Tables::NumberGuessingTable) << "]\n"
+				<< "High Stake Guess the number table [" << static_cast<int>(Tables::HighStakeNumberGuessing) << "]\n"
+				<< "Low Stake Guess the number table [" << static_cast<int>(Tables::LowStakeNumberGuessing) << "]\n"
 				<< "Rock Paper Scissors table [" << static_cast<int>(Tables::RockPaperScissors) << "]\n"
 				<< "Guess the square table [" << static_cast<int>(Tables::GuessTheSquare) << "]\n"
 				<< "Roulette table [" << static_cast<int>(Tables::Roulette) << "]\n"
@@ -47,9 +49,14 @@ namespace Casino
 			{
 
 				switch (static_cast<Tables>(userInput)) {
-					case Tables::NumberGuessingTable:
+					case Tables::HighStakeNumberGuessing:
 					{
-						myGuessTheNumber.Play(myRandomHandler);
+						myGuessTheNumberLowStake.Play(myRandomHandler);
+						break;
+					}
+					case Tables::LowStakeNumberGuessing:
+					{
+						myGuessTheNumberHighStake.Play(myRandomHandler);
 						break;
 					}
 					case Tables::OddOrEvenTable:

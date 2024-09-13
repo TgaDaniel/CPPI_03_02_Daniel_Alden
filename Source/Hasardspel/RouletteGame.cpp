@@ -220,7 +220,7 @@ namespace Roulette
 	RouletteTable::RouletteTable(const RouletteConditions aConditions, Player::PlayerInformation& aPLayerInfo,
 		const GameUtilities::GeneralCasinoRules aGeneralRules)
 		: myBoardColumnSize(3), myBoardRowSize(12), myConditions(aConditions), myGeneralRules(aGeneralRules),
-		  myPLayerInfo(aPLayerInfo)
+		myPLayerInfo(aPLayerInfo)
 	{
 		InitializeRouletteBoard();
 		myBet = 0;

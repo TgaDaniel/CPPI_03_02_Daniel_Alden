@@ -12,7 +12,7 @@ namespace OddEvenGame
 	{
 		const bool isEven = GameUtilities::CheckIfEven(aSecondDie);
 
-		const bool houseDefaultWin{GameUtilities::CheckIfEven(aFirstDie) != GameUtilities::CheckIfEven(aSecondDie) && aSecondDie > 0 };
+		const bool houseDefaultWin{ GameUtilities::CheckIfEven(aFirstDie) != GameUtilities::CheckIfEven(aSecondDie) && aSecondDie > 0 };
 
 		std::cout << "\n\n	Die Game Stats--------\n"
 			<< "	-----------------------\n"
@@ -32,9 +32,9 @@ namespace OddEvenGame
 
 	OddEvenTable::OddEvenTable(int aWinMultiplier,
 		Player::PlayerInformation& aPLayerInfo, const GameUtilities::GeneralCasinoRules aGeneralRules)
-	:myConditions({1,6, aWinMultiplier}), myPLayerInfo(aPLayerInfo), myGeneralRules(aGeneralRules)
+		:myConditions({ 1,6, aWinMultiplier }), myPLayerInfo(aPLayerInfo), myGeneralRules(aGeneralRules)
 	{
-		myTotalValueChangeOddOrEven = 0;
+		myTotalValueChange = 0;
 		myTotalWinAmountOddOrEven = 0;
 		myBet = 0;
 	}
@@ -52,18 +52,7 @@ namespace OddEvenGame
 		system("cls");
 		std::cout << "Welcome to the Even or Odd guessing game!!!\n";
 
-		if (myTotalValueChangeOddOrEven <= -myGeneralRules.reactionAmount)
-		{
-			std::cout << "\nBetter luck this time, i'm sure you'll win.\n\n";
-		}
-		else if (myTotalValueChangeOddOrEven >= myGeneralRules.reactionAmount)
-		{
-			std::cout << "\nThe big winner is back huh? Share some of that luck will ya?\n\n";
-		}
-		else
-		{
-			std::cout << "\nThis will be fun!\n";
-		}
+		IOHandler::ReactionText(myGeneralRules, myTotalValueChange);
 
 		std::cout << "Want the game explained to you?(y/n):";
 
@@ -116,9 +105,9 @@ namespace OddEvenGame
 					std::cout << "\nYou guessed right! The dice are " << (guess ? "Even" : "Odd") << "!!!\n";
 					IOHandler::HandleAllInWin(myPLayerInfo);
 
-					myPLayerInfo.AddStatisticsToLastFiveGames( (myBet * myConditions.winMultiplier));
+					myPLayerInfo.AddStatisticsToLastFiveGames((myBet * myConditions.winMultiplier));
 
-					myTotalValueChangeOddOrEven += (myBet * myConditions.winMultiplier) - myBet;
+					myTotalValueChange += (myBet * myConditions.winMultiplier) - myBet;
 
 					myTotalWinAmountOddOrEven += (myBet * myConditions.winMultiplier) - myBet;
 					myPLayerInfo.IncrementallyChangeMoney(myBet * myConditions.winMultiplier);
@@ -133,15 +122,15 @@ namespace OddEvenGame
 				else
 				{
 					std::cout << "\nYour guess was wrong and the dice were " << (!guess ? "Even" : "Odd") << "!!!\n";
-					myPLayerInfo.AddStatisticsToLastFiveGames( -myBet);
-					myTotalValueChangeOddOrEven -= myBet;
+					myPLayerInfo.AddStatisticsToLastFiveGames(-myBet);
+					myTotalValueChange -= myBet;
 				}
 			}
 			else
 			{
 				std::cout << "\nSince the numbers on the dice are both even and uneven the house wins and you lose.\n\nBetter luck next time\n";
-				myPLayerInfo.AddStatisticsToLastFiveGames( -myBet);
-				myTotalValueChangeOddOrEven -= myBet;
+				myPLayerInfo.AddStatisticsToLastFiveGames(-myBet);
+				myTotalValueChange -= myBet;
 			}
 
 			if (!myPLayerInfo.HasMoney())

@@ -5,8 +5,8 @@
 int main()
 {
 	RandomHandler randomHandler{};
-	Player::PlayerInformation player{ 500 };
-	GameUtilities::GeneralCasinoRules rules = { 500,100 };
+	Player::PlayerInformation player{ 1000 };
+	GameUtilities::GeneralCasinoRules rules = { 1500,200 };
 
 	Casino::CasinoHandler casino{player,rules,randomHandler};
 

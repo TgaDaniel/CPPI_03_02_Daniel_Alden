@@ -37,13 +37,13 @@ namespace Roulette
 
 	private:
 
-		 const int myBoardColumnSize;
-		 const int myBoardRowSize;
+		const int myBoardColumnSize;
+		const int myBoardRowSize;
 
 		CellValues myGameBoard[3][12];
 
-		  int myTotalWinAmount;
-		  int myValueChange;
+		int myTotalWinAmount;
+		int myValueChange;
 
 		int myBet;
 

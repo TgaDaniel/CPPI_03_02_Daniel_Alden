@@ -11,8 +11,8 @@ namespace OddEvenGame
 		void Play(RandomHandler& aRandomHandler);
 
 	private:
-		  int myTotalWinAmountOddOrEven;
-		  int myTotalValueChangeOddOrEven;
+		int myTotalWinAmountOddOrEven;
+		int myTotalValueChange;
 
 		int myBet;
 

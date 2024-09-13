@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "CasinoHandler.h"
 #include "GameUtilities.h"
 #include "IOHandler.h"
 #include "RandomHandler.h"
@@ -41,8 +42,8 @@ namespace GuessTheSquare
 
 	GuessTheSquareTable::GuessTheSquareTable(int aWinMultiplier, Player::PlayerInformation& aPlayerInfo,
 		const GameUtilities::GeneralCasinoRules aGeneralRules)
-		: myConditions({1,6,aWinMultiplier}), myPLayerInfo(aPlayerInfo), myGeneralRules(aGeneralRules)
-	
+		: myConditions({ 1,6,aWinMultiplier }), myPLayerInfo(aPlayerInfo), myGeneralRules(aGeneralRules)
+
 	{
 		mySquares = { false };
 	}
@@ -64,18 +65,7 @@ namespace GuessTheSquare
 
 		std::cout << "\nWelcome to Guess the square table!\n";
 
-		if (valueChangeAmount <= -myGeneralRules.reactionAmount)
-		{
-			std::cout << "\nBetter luck this time, i'm sure you'll win.\n";
-		}
-		else if (valueChangeAmount >= myGeneralRules.reactionAmount)
-		{
-			std::cout << "\nThe big winner is back huh? Share some of that luck will ya?\n";
-		}
-		else
-		{
-			std::cout << "\nThis will be fun!\n";
-		}
+		IOHandler::ReactionText(myGeneralRules, valueChangeAmount); 
 
 		std::cout << "\nWant the game explained?(y/n):";
 
@@ -116,7 +106,7 @@ namespace GuessTheSquare
 				int playerInput;
 				std::cin >> playerInput;
 
-				if (IOHandler::ValidateInput() && playerInput > 0 && playerInput <= mySquares.size() )
+				if (IOHandler::ValidateInput() && playerInput > 0 && playerInput <= mySquares.size())
 				{
 					choosing = false;
 					system("cls");
@@ -127,7 +117,7 @@ namespace GuessTheSquare
 					{
 						myPLayerInfo.IncrementallyChangeMoney(bet * myConditions.winMultiplier);
 
-						myPLayerInfo.AddStatisticsToLastFiveGames( (bet * myConditions.winMultiplier));
+						myPLayerInfo.AddStatisticsToLastFiveGames((bet * myConditions.winMultiplier));
 
 						totalWinAmount += (bet * myConditions.winMultiplier) - bet;
 						valueChangeAmount += (bet * myConditions.winMultiplier) - bet;
@@ -154,13 +144,13 @@ namespace GuessTheSquare
 					}
 					else
 					{
-						myPLayerInfo.AddStatisticsToLastFiveGames( -bet);
+						myPLayerInfo.AddStatisticsToLastFiveGames(-bet);
 						valueChangeAmount -= bet;
 						DisplaySquares(indexGuess);
 						std::cout << "\nIt's empty...\n";
 						IOHandler::PauseThenClearScreen();
 
-						DisplaySquares( indexWithStarIn);
+						DisplaySquares(indexWithStarIn);
 						std::cout << "\nThe right value is in box " << indexWithStarIn + 1 << " and you lost " << bet << "$\n";
 						IOHandler::PauseThenClearScreen();
 					}

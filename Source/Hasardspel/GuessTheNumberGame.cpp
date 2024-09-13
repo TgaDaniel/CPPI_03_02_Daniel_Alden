@@ -24,8 +24,21 @@ namespace GuessTheNumber
 			<< "\n	-----------------------\n\n";
 	}
 
-	GuessTheNumberTable::GuessTheNumberTable( int aWinMultiplier, Player::PlayerInformation& aPlayerInformation, GameUtilities::GeneralCasinoRules aRules)
-	: myConditions({1,6,aWinMultiplier}), myPlayerInfo(aPlayerInformation),myGeneralRules(aRules)
+	bool GuessTheNumberTable::ValidatePlayerCanBet() const
+	{
+		if (myPlayerInfo.GetMoney() < myTableBetParameters.minBet)
+		{
+			std::cout << "\nYou need at least " << myTableBetParameters.minBet << " to play att this table\n";
+			IOHandler::PauseThenClearScreen();
+			return false;
+		}
+		return true;
+	}
+
+	GuessTheNumberTable::GuessTheNumberTable(int aWinMultiplier, Player::PlayerInformation& aPlayerInformation,
+		GameUtilities::GeneralCasinoRules aRules, const GameUtilities::TableBetParameters aTableBetParams)
+		: myTableBetParameters(aTableBetParams),
+		myConditions({ 1, 6, aWinMultiplier }), myPlayerInfo(aPlayerInformation), myGeneralRules(aRules)
 	{
 		myBet = 0;
 		myFirstDie = 0;
@@ -34,6 +47,8 @@ namespace GuessTheNumber
 		myTotalValueChange = 0;
 		myTotalWinAmount = 0;
 	}
+
+
 
 	void GuessTheNumberTable::Play(RandomHandler& aRandomHandler)
 	{
@@ -44,9 +59,12 @@ namespace GuessTheNumber
 			return;
 		}
 
+		if (!ValidatePlayerCanBet()) return;
+
 		system("cls");
 
-		std::cout << "\nWelcome to the number guessing game!!! \n";
+		std::cout << "\nWelcome to the number guessing game!!!\n"
+			   "Bets start start at " << myTableBetParameters.minBet << " and goes up to " << myTableBetParameters.maxBet;
 
 		IOHandler::ReactionText(myGeneralRules, myTotalValueChange);
 
@@ -61,7 +79,6 @@ namespace GuessTheNumber
 
 		std::cout << "Want to sit down and play?(y/n): ";
 
-		//returns player from function if 'n' is input
 		if (!IOHandler::TwoCharacterOptionInput('y', 'n'))
 		{
 			std::cout << "\nOkay, come back when you feel braver.\n";
@@ -83,7 +100,7 @@ namespace GuessTheNumber
 			while (guessing)
 			{
 
-				myBet = GameUtilities::HandleBetting(myPlayerInfo);
+				myBet = GameUtilities::HandleBetting(myPlayerInfo, true, myTableBetParameters);
 
 				DisplayGuessNumberGameStatBoard();
 				std::cout << "\nGuess the number you think the two dice will land on: ";
@@ -114,7 +131,7 @@ namespace GuessTheNumber
 						std::cout << "\nWhich means you WIN!!!\n you guessed the right number!\n";
 						IOHandler::HandleAllInWin(myPlayerInfo);
 						myPlayerInfo.IncrementallyChangeMoney(myBet * myConditions.winMultiplier);
-						myPlayerInfo.AddStatisticsToLastFiveGames(  (myBet * myConditions.winMultiplier));
+						myPlayerInfo.AddStatisticsToLastFiveGames((myBet * myConditions.winMultiplier));
 
 						myTotalValueChange += (myBet * myConditions.winMultiplier) - myBet;
 
@@ -131,7 +148,7 @@ namespace GuessTheNumber
 						std::cout << "\nWhich mean you lost with a number " << (myGuess < winningNr ? "too low..." : "too high...") << " since the added value of both die is: "
 							<< winningNr << "\nBetter luck next time!\n";
 						myTotalValueChange -= (myBet * myConditions.winMultiplier) - myBet;
-						myPlayerInfo.AddStatisticsToLastFiveGames( -myBet);
+						myPlayerInfo.AddStatisticsToLastFiveGames(-myBet);
 					}
 				}
 				else
@@ -147,8 +164,9 @@ namespace GuessTheNumber
 			{
 				return;
 			}
+			if (!ValidatePlayerCanBet()) return;
 			IOHandler::PauseThenClearScreen();
-			
+
 			myPlayerInfo.DisplayLastFiveGameStatistics();
 
 			DisplayGuessNumberGameStatBoard();

@@ -13,7 +13,8 @@ namespace Casino
 	enum class Tables
 	{
 		OddOrEvenTable = 1,
-		NumberGuessingTable,
+		HighStakeNumberGuessing,
+		LowStakeNumberGuessing,
 		RockPaperScissors,
 		GuessTheSquare,
 		Roulette,
@@ -33,7 +34,8 @@ namespace Casino
 		const GameUtilities::GeneralCasinoRules myRules;
 		RandomHandler& myRandomHandler;
 
-		GuessTheNumber::GuessTheNumberTable myGuessTheNumber;
+		GuessTheNumber::GuessTheNumberTable myGuessTheNumberLowStake;
+		GuessTheNumber::GuessTheNumberTable myGuessTheNumberHighStake;
 		OddEvenGame::OddEvenTable myOddEven;
 		GuessTheSquare::GuessTheSquareTable myGuessTheSquare;
 		RockPaperScissors::RockPaperScissorsTable myRockPaperScissors;

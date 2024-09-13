@@ -5,17 +5,22 @@
 
 namespace GameUtilities
 {
-	int HandleBetting(Player::PlayerInformation& aPlayerInfo)
+	int HandleBetting(Player::PlayerInformation& aPlayerInfo, bool aUseBetParams, TableBetParameters aBetParams)
 	{
 		while (true)
 		{
+			//Sets maxBet to above player money
+			if(!aUseBetParams)
+			{
+				aBetParams.maxBet = aPlayerInfo.GetMoney();
+			}
 
 			aPlayerInfo.DisplayMoney();
 			std::cout << "\nHow much do you want to bet?: ";
 
 			int betAmount{ 0 };
 			std::cin >> betAmount;
-			if (IOHandler::ValidateInput() && betAmount > 0 && betAmount <= aPlayerInfo.GetMoney())
+			if (IOHandler::ValidateInput() && betAmount >= aBetParams.minBet && betAmount <= aBetParams.maxBet && betAmount <= aPlayerInfo.GetMoney())
 			{
 				if (betAmount == aPlayerInfo.GetMoney())
 				{
