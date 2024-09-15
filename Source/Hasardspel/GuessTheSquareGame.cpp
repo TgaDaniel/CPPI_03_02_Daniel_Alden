@@ -13,6 +13,7 @@ namespace GuessTheSquare
 	void GuessTheSquareTable::DisplaySquares(int aDisplaySquare) const
 	{
 		std::cout << "\n";
+
 		for (int i = 0; i < mySquares.size(); i++)
 		{
 			if (i == aDisplaySquare)
@@ -42,7 +43,7 @@ namespace GuessTheSquare
 
 	GuessTheSquareTable::GuessTheSquareTable(int aWinMultiplier, Player::PlayerInformation& aPlayerInfo,
 		const GameUtilities::GeneralCasinoRules aGeneralRules)
-		: myConditions({ 1, 6, aWinMultiplier }), myPLayerInfo(aPlayerInfo),
+		: myConditions({ 1, 5, aWinMultiplier }), myPLayerInfo(aPlayerInfo),
 		myGeneralRules(aGeneralRules)
 
 	{
@@ -94,7 +95,6 @@ namespace GuessTheSquare
 
 			bet = GameUtilities::HandleBetting(myPLayerInfo);
 
-			DisplaySquares();
 
 
 			bool choosing{ true };
@@ -104,12 +104,13 @@ namespace GuessTheSquare
 
 				int indexWithStarIn{ aRandomHandler.RandomNumberInRange(myConditions.minRandomValue, myConditions.maxRandomValue) - 1 };
 				mySquares[indexWithStarIn] = true;
+				DisplaySquares();
 				std::cout << "In which box do you think the star will be?\nInput: ";
 
 				int playerInput;
 				std::cin >> playerInput;
 
-				if (IOHandler::ValidateInput() && playerInput > 0 && playerInput <= mySquares.size())
+				if (IOHandler::ValidateInput() && playerInput > 0 && playerInput < mySquares.size())
 				{
 					choosing = false;
 					system("cls");

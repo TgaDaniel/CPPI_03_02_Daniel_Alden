@@ -16,7 +16,7 @@ namespace RockPaperScissors
 	class RockPaperScissorsTable
 	{
 	public:
-		RockPaperScissorsTable(int aWinMultiplier, Player::PlayerInformation aPlayerInfo, GameUtilities::GeneralCasinoRules aRules);
+		RockPaperScissorsTable(int aWinMultiplier, Player::PlayerInformation& aPlayerInfo, GameUtilities::GeneralCasinoRules aRules);
 
 		void Play(RandomHandler& aRandomHandler);
 
@@ -26,6 +26,7 @@ namespace RockPaperScissors
 
 		int myBet;
 		SelectHand myPlayerHand;
+		SelectHand myOpponentHand;
 
 		const GameUtilities::GameConditions myConditions;
 		Player::PlayerInformation& myPLayerInfo;

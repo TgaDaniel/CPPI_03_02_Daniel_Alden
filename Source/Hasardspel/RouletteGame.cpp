@@ -223,6 +223,8 @@ namespace Roulette
 		myPLayerInfo(aPLayerInfo)
 	{
 		InitializeRouletteBoard();
+		myValueChange = 0;
+		myTotalWinAmount = 0;
 		myBet = 0;
 	}
 

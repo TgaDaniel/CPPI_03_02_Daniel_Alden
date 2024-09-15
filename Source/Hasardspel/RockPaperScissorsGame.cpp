@@ -20,9 +20,9 @@ namespace RockPaperScissors
 			<< "\n	-----------------------\n"
 			<< "	OPPONENT HAND 1: " << (aHiddenOpponent
 				? "Not revealed"
-				: (myPlayerHand == SelectHand::Rock
+				: (myOpponentHand == SelectHand::Rock
 					? "ROCK"
-					: (myPlayerHand == SelectHand::Paper
+					: (myOpponentHand == SelectHand::Paper
 						? "PAPER"
 						: "SCISSORS")))
 			<< "\n	-----------------------\n"
@@ -33,14 +33,14 @@ namespace RockPaperScissors
 	}
 
 	RockPaperScissorsTable::RockPaperScissorsTable(int aWinMultiplier,
-		Player::PlayerInformation aPlayerInfo, GameUtilities::GeneralCasinoRules aRules)
+		Player::PlayerInformation& aPlayerInfo, GameUtilities::GeneralCasinoRules aRules)
 		: myConditions({ 1,3,aWinMultiplier }), myPLayerInfo(aPlayerInfo), myGeneralRules(aRules)
 	{
 		myBet = 0;
 		myPlayerHand = SelectHand::Rock;
+		myOpponentHand = SelectHand::Rock;
 		myTotalValueChange = 0;
 		myTotalWinAmount = 0;
-
 	}
 
 	void RockPaperScissorsTable::Play(RandomHandler& aRandomHandler)
@@ -81,7 +81,7 @@ namespace RockPaperScissors
 
 				system("cls");
 
-				SelectHand opponentHand = static_cast<SelectHand>(aRandomHandler.RandomNumberInRange(1, 3));
+				myOpponentHand = static_cast<SelectHand>(aRandomHandler.RandomNumberInRange(1, 3));
 				bool playerHasWinningHand{ false };
 
 
@@ -106,7 +106,7 @@ namespace RockPaperScissors
 
 					DisplayRockPaperScissorsGameStatBoard();
 
-					if (myPlayerHand == opponentHand)
+					if (myPlayerHand == myOpponentHand)
 					{
 						std::cout << "\nThe opponent and you have the same hand and the house wins by default\n";
 					}
@@ -116,7 +116,7 @@ namespace RockPaperScissors
 						{
 							case SelectHand::Rock:
 							{
-								if (opponentHand == SelectHand::Paper)
+								if (myOpponentHand == SelectHand::Paper)
 								{
 									std::cout << "Rock loses to Paper\n";
 								}
@@ -129,7 +129,7 @@ namespace RockPaperScissors
 							}
 							case SelectHand::Paper:
 							{
-								if (opponentHand == SelectHand::Scissors)
+								if (myOpponentHand == SelectHand::Scissors)
 								{
 									std::cout << "Paper loses to Scissors\n";
 								}
@@ -142,7 +142,7 @@ namespace RockPaperScissors
 							}
 							case SelectHand::Scissors:
 							{
-								if (opponentHand == SelectHand::Rock)
+								if (myOpponentHand == SelectHand::Rock)
 								{
 									std::cout << "Scissors loses to Rock\n";
 								}
